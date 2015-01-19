@@ -279,7 +279,7 @@
     
     //Tax Abandonment ***************************************************************************************
     $dateDifference = date("Y") - $dateOfServiceBind;
-    $taxAbandonment = $costs["abandonment_multiplier"] * (1 - $dateDifference / 39) * $sumExistingMaintenanceCost;
+    $taxAbandonment = $costs["abandonment_multiplier"] * ((1 - $dateDifference) / 39) * $sumExistingMaintenanceCost;
     if($taxAbandonment < 0)
     {
         $taxAbandonment = 0;
