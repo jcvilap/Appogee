@@ -1,0 +1,416 @@
+<div id="main">
+
+<!-- Google maps container -->
+<div id="map-canvas" style="top: 0;" class="hidden-xs"></div>
+<div class="container-fluid" id="main">
+  <div id="middleContainer" class="row">
+    <!-- Project Details -->
+    <div id="detailsContainer" class="col-sm-8" style="display:none; padding-top: 10px; padding-right: 20px; margin-top: -10px;">
+      <h2 style="color:#337ab7">
+        &nbsp;Project {{ activeProject.project_ID }} Details 
+        <div class="pull-right" ng-switch on="activeProject.status_description">
+            <span ng-switch-when="ACTIVE" class="badge alert-success">{{ activeProject.status_description }}</span>
+            <span ng-switch-when="INACTIVE" class="badge alert-info">{{ activeProject.status_description }}</span>
+            <span ng-switch-when="CLOSED" class="badge alert-danger">{{ activeProject.status_description }}</span>
+        </div>
+      </h2>
+      <div id="detailMiddleContainer">
+        <!-- Control Group Buttons-->
+        <div class="btn-group btn-group-justified hidden-xs">
+          <div class="btn-group">
+            <button id="poBnt" type="button" class="btn btn-outline btn-primary">Project Overview</button>
+          </div>
+          <div class="btn-group">
+            <button id="ldBnt" type="button" class="btn btn-outline btn-primary">Light Drilldown</button>
+          </div>
+          <div class="btn-group">
+            <button id="spBnt" type="button" class="btn btn-outline btn-primary">Sales Presentations</button>
+          </div>
+        </div>
+        <!-- Project Overview Panel-->
+        <div id="poPanel" class="panel panel-default" style="margin-top: 10px;">
+          <div class="panel-heading"> <i class="fa fa-bars fa-fw"></i> Project Overview </div>
+          <div class="panel-body">
+            <!-- Project Details -->
+            <div>
+              <div class="panel panel-primary">
+                <div class="panel-heading"><span style="font-size:16px">{{ activeProject.project_name }}<span class="pull-right"><em><small>{{ activeProject.city }}, {{ activeProject.state }}</small></em></span></span></div>
+                <div class="panel-body">
+                  <div class="list-group col-sm-6">
+                    <a class="list-group-item"> <i class="fa fa-user fa-fw"></i> Contact Name 
+                      <span class="pull-right text-muted small"><em>{{ activeProject.contact_name }} </em></span>
+                    </a>
+                    <a class="list-group-item">
+                      <i class="fa fa-phone fa-fw"></i> Phone
+                      <span class="pull-right text-muted small"><em>{{ activeProject.contact_phone }}</em> </span>
+                    </a>
+                    <a class="list-group-item">
+                      <i class="fa fa-envelope fa-fw"></i> Email Address
+                      <span class="pull-right text-muted small"><em>{{ activeProject.contact_email }}</em> </span>
+                    </a>
+                  </div>
+                  <div class="list-group col-sm-6">
+                    <a class="list-group-item">
+                      <i class="fa fa-calendar fa-fw"></i> Date Created
+                      <span class="pull-right text-muted small"><em>{{ activeProject.date_opened }}</em> </span>
+                    </a>
+                    <a class="list-group-item">
+                      <i class="fa fa-area-chart fa-fw"></i> Lot Area
+                      <span class="pull-right text-muted small"><em>{{ activeProject.lot_area }} sq ft</em> </span>
+                    </a>
+                    <a class="list-group-item" href="#">
+                      <i class="fa fa-bolt fa-fw"></i> Power Cost
+                      <span class="pull-right text-muted small"><em>${{ activeProject.power_cost_per_kWh }} /kWh</em> </span>
+                    </a>
+                  </div>
+                 </div>
+                
+              </div>
+            </div>
+            <!-- Light Fixtures Table -->
+            <div class="panel panel-default col-sm-12" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
+              <div class="panel-heading"> Light Fixtures: </div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead> <tr><th>Part No.</th><th>Description</th><th>Quantity</th></tr> </thead>
+                    <tbody>
+                      <tr ng-repeat="pole in activeProject.lightFixtureTablePoles">  
+                        <td>{{ pole.LEDpartNumber }}</td>
+                        <td>{{ pole.LEDdesc }}</td>
+                        <td>{{ pole.numOfHeadsProposed}}</td>
+                      </tr>
+                      <tr class="alert alert-success" >
+                        <td></td>
+                        <td><b>Totals</b></td>
+                        <td>{{ activeProject.lightFixtureTotalQuantity }} </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- Brakets/Others Table -->  
+            <div class="panel panel-default col-sm-12" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
+              <div class="panel-heading"> Brackets/Others: </div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead> <tr><th>Part No.</th><th>Description</th><th>Quantity</th></tr> </thead>
+                    <tbody>
+                      <!-- <tr ng-repeat="pole in activeProject.poles">  --> 
+                      <tr>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                      </tr>
+                      <tr class="success" >
+                        <td></td>
+                        <td><b>Totals</b></td>
+                        <td>N/A</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>  
+          </div>
+        </div>
+        <!-- Light Drilldown Panel -->
+        <div id="ldPanel" class="panel panel-default" style="margin-top: 10px; display:none;">
+          <div class="panel-heading">Light Drilldown</div>
+          <div class="panel-body">
+             <accordion>
+              <accordion-group ng-repeat="pole in activeProject.poles">
+                <accordion-heading>
+                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Pole {{ pole.poleID }}</div>
+                </accordion-heading>
+                <div class="col-md-9" >
+                  <div class="table-responsive table-bordered">
+                    <table class="table">
+                      <thead> <tr><th></th><th>Description</th><th>Number of Heads</th><th>Wattage</th></tr></thead>
+                      <tbody>
+                        <tr>  
+                          <td>Existing Fixture</td>
+                          <td>{{ pole.bulbDesc }} </td>
+                          <td>{{ pole.numOfHeads }}</td>
+                          <td>{{ pole.legWattage }}</td>
+                        </tr>
+                        <tr>  
+                          <td>Proposed Fixture</td>
+                          <td>{{ pole.LEDdesc }}</td>
+                          <td>{{ pole.numOfHeadsProposed }}</td>
+                          <td>{{ pole.LEDwattage }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div></br>
+                  <div class="alert alert-warning" ng-if="pole.bracket == 1 && pole.numOfHeadsProposed > 0">
+                      The proposed fixture requires the purchase of 
+                      <b>one {{ pole.numOfHeadsProposed }}<i>-arm</i></b>  bracket
+                  </div>
+                </div>
+                <div class="col-md-3 hidden-xs"><img src="http://ec2-54-165-80-46.compute-1.amazonaws.com/iOS/Images/{{ pole.poleID }}.jpg" class="img-thumbnail" style="width: 100%;" alt="Image Not Available"></img></div>
+              </accordion-group>
+            </accordion>
+         
+          </div>
+
+          </div>
+        </div>
+        <!-- Sales Presentation Panel -->
+        <div id="spPanel" class="panel panel-default" style="margin-top: 10px; display:none;">
+          <div class="panel-heading"><i class="fa fa-shopping-cart"></i> Sales Presentation</div>
+          <div class="panel-body">
+            <!-- Presentation Header -->
+            <div class="row">
+              <!-- Logo (offset)-->
+              <div class="col-md-3 pull-right">
+                <img width="220px" style="margin-top: -8px; margin-left: -13px;" class="img-responsive pull-right" id="logo" alt="Image" src="webapp/images/ArkonLED_Logo_HighRes.jpg">
+              </div>
+              <!-- User -->
+              <div class="col-md-4">
+                <h3 style="margin-top: 10px; margin-bottom: 20px;">{{ activeProject.first_name }} {{ activeProject.last_name }}</br> <small><i>{{ activeProject.user_title }}</i></small></h3>
+              </div>
+              <!-- Options -->
+              <div style="margin: 10px 0px;" class="col-md-5">
+                <span class="text-primary" style="margin-right:px">Options: </span>
+                <div style="margin-right:5px" class="btn-group">
+                  <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button">
+                    Standard Shipping<span class="caret"></span>
+                  </button>
+                  <ul role="menu" class="dropdown-menu">
+                    <li id="expeditedShippingBt"><a href="">Expedited Shipping</a></li>
+                    <li id="standardShippingBt"><a href="">Standard Shipping</a></li>
+                  </ul>
+                </div>
+                <div class="btn-group">
+                  <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button">
+                    Upfront Purchase<span class="caret"></span>
+                  </button>
+                  <ul role="menu" class="dropdown-menu pull-right">
+                    <li id="upfrontPurchaseBt"><a href="">Upfront Purchase</a></li>
+                    <li id="leaseToOwnBt"><a href="">Lease To Own</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!-- Costs Accordion-->
+              <div class="col-md-4">
+                <accordion>
+                  <accordion-group is-open="true">
+                    <accordion-heading> <div><i class="fa fa-usd"></i> Costs </div> </accordion-heading>
+                    <div ng-if="activeView == 'expeditedShipping'">
+                      <div class="list-group">
+                        <a class="list-group-item">Product<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.productCostStandard }}</em></span> </a>
+                        <a class="list-group-item">Installation<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.installationCost }}</em></span> </a>
+                        <a class="list-group-item">Sales Tax<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.salesTaxStandard }}</em></span> </a>
+                        <a class="list-group-item total"><b>Total Costs</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.totalCostStandard }}</b></em></span></a>
+                      </div>
+                    </div>
+                    <div ng-if="activeView == 'standardShipping'">
+                      <div class="list-group">
+                        <a class="list-group-item">Product<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.productCostExpedited }}</em></span> </a>
+                        <a class="list-group-item">Installation<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.installationCost }}</em></span> </a>
+                        <a class="list-group-item">Sales Tax<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.salesTaxExpedited }}</em></span> </a>
+                        <a class="list-group-item total"><b>Total Costs</b><span class="pull-right"><em><b>${{activeProject.calculationsData.totalCostExpedited }}</b></em></span></a>
+                      </div>
+                    </div>
+                  </accordion-group>
+                  <accordion-group>
+                    <accordion-heading> <div><i class="fa fa-check-square-o"></i> Benefits </div> </accordion-heading>
+                    <div class="list-group">
+                      <a class="list-group-item">Power Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.powerSavings }}</em></span> </a>
+                      <a class="list-group-item">Maintenance Savings<span class="pull-right text-muted small"><em>N/A</em></span> </a>
+                      <a class="list-group-item">Abandonment Tax Rebate<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.taxAbandonment }}</em></span> </a>
+                      <a class="list-group-item total"><b>Total Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.yearByYearSavings[0] }}</b></em></span></a>
+                    </div>
+                  </accordion-group>
+                  <accordion-group>
+                    <accordion-heading> <div><i class="fa fa-credit-card"></i> Payment Options</div> </accordion-heading>
+                    <div ng-if="paymentType == 'upfrontPurchase'">
+                      <div class="list-group">
+                        <a class="list-group-item total"><b>Total Cost</b><span class="pull-right"><em>
+                          <b>
+                            <div ng-if="activeView == 'expeditedShipping'">${{ activeProject.calculationsData.totalCostExpedited }}</div>
+                            <div ng-if="activeView == 'standardShipping'">${{ activeProject.calculationsData.totalCostStandard }}</div>
+                          </b></em></span>
+                        </a>
+                      </div>
+                    </div>
+                    <div ng-if="paymentType == 'leaseToOwn'">
+                      <div class="list-group">
+                        <a class="list-group-item">Total Price<span class="pull-right text-muted small"><em>
+                          <div ng-if="activeView == 'expeditedShipping'">${{ activeProject.calculationsData.totalCostExpedited }}</div>
+                          <div ng-if="activeView == 'standardShipping'">${{ activeProject.calculationsData.totalCostStandard }}</div></em></span> 
+                        </a>
+                        <a class="list-group-item">Lease Term<span class="pull-right text-muted small"><em>60 Months(5 years)</em></span> </a>
+                        <a class="list-group-item">Equivalent Annual Payment<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.yearlyLeasePaymentStandard }}</em></span> </a>
+                        <a class="list-group-item"><b>Monthly Payment</b><span class="pull-right"><em><b>
+                          <div ng-if="activeView == 'expeditedShipping'">${{ activeProject.calculationsData.monthlyLeasePaymentExpedited }}</div>
+                          <div ng-if="activeView == 'standardShipping'">${{ activeProject.calculationsData.monthlyLeasePaymentStandard }}</div>
+                          </b></em></span>
+                        </a>
+                        <a class="list-group-item total"><b>Inmediate Monthly Savings</b><span class="pull-right"><em><b>$1,000</b></em></span></a>
+                      </div>
+                    </div>
+                  </accordion-group>
+                </accordion>
+              </div>
+              <!-- Area Chart -->
+              <div class="col-md-8">
+                <div id="areaChart" class="panel panel-default">
+                  <div class="panel-heading"><i class="fa fa-bar-chart-o fa-fw"></i> Cost Comparison</div>
+                  <div class="panel-body">
+                    <div class="col-sm-12">
+                      <h3 style="margin: 0"><i class="timeline-badge fa fa-check"></i>Total Savings:<small style="margin:10px;"> $ {{activeProject.totalSavings}}</small> </h3>
+                    </div>
+                    <div class="col-sm-12">
+                      <div id="morris-area-chart"></div>
+                    </div>
+                    <div class="col-sm-12" style="margin: 15px 15px 15px 0px; font-size: 11px;">
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3 "><span class="leyend label" style="background-color: DarkSeaGreen;"> </span>LED Lease Costs</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: LimeGreen;"> </span>LED Power Consumption</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: DarkSalmon;"> </span>Maintenance Costs</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: Brown;"> </span>Existing Power Consumption</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Power Usage Now -->
+            <div class="col-md-6">
+              <div id="powerUsagePanel" class="panel panel-default">
+                <div class="panel-heading "><i class="fa fa-plug"></i> Power Usage For This Month</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.existingMonthlyPowerUsage }} W
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingPowerUsage" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.proposedMonthlyPowerUsage }} W
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedPowerUsage" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            <!-- Maintenance Cost -->
+            <div class="col-md-6">
+              <div id="maintenanceCostPanel" class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-money"></i> Maintenance Cost For This Month</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Lease Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.monthlyLeasePaymentStandard }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            <!-- What is my Cost -->
+            <div class="col-md-6">
+              <div id="powerUsagePanel" class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-money"></i> Power Cost For This Month</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyPowerCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingPowerCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.proposedMonthlyPowerCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedPowerCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            <!-- Carbon Footprint -->
+            <div class="col-md-6">
+              <div class="panel panel-default" id="powerUsagePanel">
+                <div class="panel-heading"><img width="18px" src="webapp/images/footprint.ico" style="">Carbon Footprint</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-8">
+                      <h3 class="text-danger">Existing Footprint</h3>
+                      <span class="text-muted small"><em>Equivalent to:</em></span> <br>
+                      336<span class="text-muted" style="font-size: 17px;"><em> sacks of coal till date</em></span>      
+                    </div>
+                    <div class="col-sm-4" style="padding: 25px;">
+                      <img width="80%" style="max-width: 80px; min-width: 50px;" src="webapp/images/coal.png">
+                    </div>
+                    <div style="padding:15px" class="row">
+                      <div style="border-left:none" class="col-sm-6  gadget-list-item">
+                        <h4>36.05KG CO<sub>2</sub></h4>
+                        <h6>So Far Today</h6>
+                      </div>
+                      <div style="border-right:none" class="col-sm-6  gadget-list-item">
+                        <h4>36.05KG CO<sub>2</sub></h4>
+                        <h6>Predicted This Month</h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-8">
+                      <h3 class="text-success">LED Footprint</h3>
+                      <span class="text-muted small"><em>Equivalent to:</em></span> <br>
+                      136<span class="text-muted" style="font-size: 17px;"><em> sacks of coal till date</em></span>
+                    </div>
+                    <div class="col-sm-4" style="padding: 50px;">
+                      <img width="60%" style="max-width:50px; min-width: 30px;" src="webapp/images/coal.png">
+                    </div>
+                    <div style="padding:15px" class="row">
+                      <div style="border-left:none" class="col-sm-6  gadget-list-item">
+                        <h4>3.06KG CO<sub>2</sub></h4>
+                        <h6>So Far Today</h6>
+                      </div>
+                      <div style="border-right:none" class="col-sm-6  gadget-list-item">
+                        <h4>17.8KG CO<sub>2</sub></h4>
+                        <h6>Predicted This Month</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>  
+        </div>
+    </div> 
+    <!-- map-canvas container-->
+    <div class="col-sm-4"></div>
+  </div>
+</div>
+
+</div>
