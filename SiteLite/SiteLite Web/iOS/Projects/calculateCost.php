@@ -318,27 +318,31 @@
 
     //Proposed Monthly kg Coal Usage END ************************************************************************
 
-   /*
+   
   
     //Simple Payback Period Standard ****************************************************************************
 
+    $exceededCost = false;
+
     $sumSavings = 0;
 
-    for ($year =1; $year <=10; $year++)
+    $year = 1;
+	
+    while ( $exceededCost == false)
     {
-        
-       
-        
-        if ($sumSavings < $response["totalCostStandard"])
+         if ($sumSavings < $response["totalCostStandard"])
         {
-            $sumSavings += $arrayYearByYearSavings[$year];
+            $sumSavings += $arrayYearByYearSavings[$year-1];
+            $year++;
+			
         }
         
-        else if ( $sumSavings >= $response["totalCostStandard"])
+        else 
         {
-            $response["simplePaybackPeriodStandard"] = $sumSavings/$response["totalCostStandard"]*$year * 12;
+           $response["simplePaybackPeriodStandard"]= ((($response["totalCostStandard"]-$sumSavings)/$arrayYearByYearSavings[$year-1])+($year-1))*12;
+            $exceededCost = true;
+			
         }
-        
     }
     
     //Simple Payback Period Standard  END ************************************************************************
@@ -346,28 +350,33 @@
 
     //Simple Payback Period Expedited ****************************************************************************
     
-    $sumSavings = 0;
-    
+   
+    $exceededCost = false;
 
-    for ($year =1 ; $year <=10; $year++)
+    $sumSavings = 0;
+
+    $year = 1;
+	
+    while ( $exceededCost == false)
     {
-        
-        
-        if ($sumSavings < $response["totalCostExpedited"])
+         if ($sumSavings < $response["totalCostExpedited"])
         {
-            $sumSavings += $arrayYearByYearSavings[$year];
+            $sumSavings += $arrayYearByYearSavings[$year-1];
+            $year++;
+			
         }
         
-        else ( $sumSavings >= $response["totalCostExpedited"])
+        else 
         {
-            $response["simplePaybackPeriodExpedited"] = $sumSavings/$response["totalCostExpedited"]*$year * 12;
+           $response["simplePaybackPeriodExpedited"]= ((($response["totalCostExpedited"]-$sumSavings)/$arrayYearByYearSavings[$year-1])+($year-1))*12;
+            $exceededCost = true;
+			
         }
-        
     }
     
     //Simple Payback Period Expedited  END ************************************************************************
                      
-     */               
+             
         
 
 
@@ -389,8 +398,8 @@
     $response["yearlyLeasePaymentExpedited"] = number_format($response["yearlyLeasePaymentExpedited"], 2, '.', '');
     $response["existingKgCoal"] = number_format($response["existingKgCoal"], 0, '.', '');
     $response["proposedKgCoal"] = number_format($response["proposedKgCoal"], 0, '.', '');
-    $response["simplePaybackPeriodStandard"] = 10 ;//number_format($response["simplePaybackPeriodStandard"], 0, '.', '');
-    $response["simplePaybackPeriodExpedited"] = 20 ;//number_format($response["simplePaybackPeriodExpedited"], 0, '.', '');
+    $response["simplePaybackPeriodStandard"] = number_format($response["simplePaybackPeriodStandard"], 0, '.', '');
+    $response["simplePaybackPeriodExpedited"] = number_format($response["simplePaybackPeriodExpedited"], 0, '.', '');
    
     
     $response["success"] = 1;

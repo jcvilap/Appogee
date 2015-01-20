@@ -183,3 +183,20 @@ table.dataTable thead .sorting_desc:after {
 .small {
     font-size: 80%;
 }
+
+.footprint-row {
+    padding-bottom: 33px;
+    padding-left: 25px;
+    padding-top: 30px;
+}
+
+.radio-btn-selected {
+    color: #fff;
+    background-color: #3071a9;
+    border-color: #285e8e;
+}
+
+.navbar-top-links > li > a:hover, .navbar-top-links > li > a:focus, .navbar-top-links > .open > a, .navbar-top-links > .open > a:hover, .navbar-top-links > .open > a:focus {
+    background-color: #000;
+    color: #fff;
+}

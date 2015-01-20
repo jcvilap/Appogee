@@ -1,4 +1,7 @@
-window.arkonLEDApp = angular.module('arkonLEDApp',['ngRoute', 'ui.bootstrap']).
+/**
+	This factory is used to get the projects info from the server via RESTful calls 
+*/
+arkonLEDApp.
 factory('projectsFactory', function ($http){
 	var factory = {};
     var url = "http://ec2-54-165-80-46.compute-1.amazonaws.com/iOS/";
@@ -33,39 +36,4 @@ factory('projectsFactory', function ($http){
     };
 
 	return factory;
-}).
-directive('onFinishRender', function($timeout){
-    return{
-        restrict: 'A',
-        link: function (scope, element, attr){
-            if(scope.$last === true){
-                scope.$evalAsync(attr.onFinishRender);
-            }
-        }
-    }
-}).
-controller('myController', function($scope, $routeParams) {
-     $scope.params = $routeParams;
-}).
-config(['$routeProvider', function($routeProvider) {
-    $routeProvider.
-    when('/', {
-        templateUrl: 'webapp/partials/main.html',
-        controller: 'MainController'
-    }).
-    when('/client/:projectId', {
-        templateUrl: 'webapp/partials/client.html',
-        controller: 'ClientController'
-    }).
-    when('/tablet/:projectId', {
-        templateUrl: 'webapp/partials/tablet.html',
-        controller: 'TabletController'
-    }).
-    when('/login', {
-        templateUrl: 'webapp/partials/login.html',
-        controller: 'myController'
-    }).
-    otherwise({
-        redirectTo: '/'
-    }); 
-}]);
+});
