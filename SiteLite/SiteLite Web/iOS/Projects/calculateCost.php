@@ -137,7 +137,7 @@
             if($oneToOneReplaceBind == 1)
             {
                 $sumCostProposedLED = $sumCostProposedLED + ($numOfHeadsProposedBind * $unitCostProposedBind);
-                $sumLEDWattage = $sumLEDWattage + $ledWattageProposedBind;
+                $sumLEDWattage = $sumLEDWattage + ($numOfHeadsExistingBind * $ledWattageProposedBind);
                 
                 //Wallpack for Installation Cost
                 if($proposedIsWallpack == 1)
@@ -163,7 +163,7 @@
             
             if($poleExistBind == 1) //Existing Maintenance Cost for Legacy Bulbs
             {
-                $sumLegacyWattage = $sumLegacyWattage + $legacyWattageBind;
+                $sumLegacyWattage = $sumLegacyWattage + ($numOfHeadsExistingBind * $legacyWattageBind);
                 
                 //Wallpack
                 if($assemblytypeIDBind == 1)
@@ -308,13 +308,13 @@
 
     //Existing Monthly kg Coal Usage ****************************************************************************
     
-   $response["existingKgCoal"] = $sumLegacyWattage * $costs["usage_hours"] * 0.12283503255128 / 12; 
+   $response["existingKgCoal"] = $sumLegacyWattage * $costs["usage_hours"] * 0.0001475 / 12 * 2.2; 
 
     //Existing Monthly kg Coal Usage END ************************************************************************
     
     //Proposed Monthly kg Coal Usage ****************************************************************************
     
-   $response["proposedKgCoal"] = $sumLEDWattage * $costs["usage_hours"] * 0.12283503255128 / 12; 
+   $response["proposedKgCoal"] = $sumLEDWattage * $costs["usage_hours"] * 0.0001475 / 12 * 2.2; 
 
     //Proposed Monthly kg Coal Usage END ************************************************************************
 

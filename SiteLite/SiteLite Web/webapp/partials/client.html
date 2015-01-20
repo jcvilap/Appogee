@@ -255,13 +255,13 @@
             <!-- Carbon Footprint -->
             <div class="col-md-6">
               <div class="panel panel-default" id="powerUsagePanel">
-                <div class="panel-heading"><img width="18px" src="webapp/images/footprint.ico" style="">Carbon Footprint</div>
+                <div class="panel-heading"><img width="18px" src="webapp/images/footprint.ico" style="">Monthly Carbon Footprint</div>
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-8 footprint-row">
                       <h3 class="text-danger">Existing Footprint</h3>
-                      <span class="text-muted small"><em>Equivalent to:</em></span> <br>
-                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>Kg</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
+                      <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
                     </div>
                     <div class="col-sm-4" style="padding: 25px;">
                       <img width="80%" style="max-width: 80px; min-width: 50px;" src="webapp/images/coal.png">
@@ -270,8 +270,8 @@
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-8 footprint-row">
                       <h3 class="text-success">LED Footprint</h3>
-                      <span class="text-muted small"><em>Equivalent to:</em></span> <br>
-                      <strong>{{  toFormattedNumber(activeProject.calculationsData.proposedKgCoal) }} <small>Kg</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
+                      <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.proposedKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
                     </div>
                     <div class="col-sm-4" style="padding: 50px;">
                       <img width="60%" style="max-width:50px; min-width: 30px;" src="webapp/images/coal.png">
