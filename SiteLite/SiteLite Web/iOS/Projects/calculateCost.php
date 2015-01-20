@@ -261,7 +261,7 @@
     $arrayExistingYearCost = array();
     for($year = 1; $year <= 10; $year++)
     {
-        $yearCost = $sumLegacyWattage * ((($powerCostPerKWHBind/100 + ($costs["power_cost_increase"] * $year)) * $costs["usage_hours"]) / 1000);
+        $yearCost = $sumLegacyWattage * ((($powerCostPerKWHBind/100 + ($costs["power_cost_increase"] * ($year-1))) * $costs["usage_hours"]) / 1000);
         $arrayExistingYearCost[] = number_format($yearCost, 2, '.', '');
     }
     $response["existingYearByYearPowerCost"] = $arrayExistingYearCost;
