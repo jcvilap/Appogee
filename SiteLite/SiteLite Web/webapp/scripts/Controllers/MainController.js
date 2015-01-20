@@ -212,7 +212,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-          		proposedMaintenanceCostChart.arrows[0].setValue( calculationsData.monthlyLeasePaymentStandard);
+          		proposedMaintenanceCostChart.arrows[0].setValue( 0);
 
 				$("#proposedPowerUsage a").remove();
 				$("#existingPowerUsage a").remove();
@@ -326,10 +326,15 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 
 			// Assign value for UI use
 			$scope.activeProject.calculationsData.existingMonthlyPowerCost = commonFactory.toFormattedNumber(Number(data.existingYearByYearPowerCost[0])/12); 
+            
 			$scope.activeProject.calculationsData.proposedMonthlyPowerCost = commonFactory.toFormattedNumber(Number(data.proposedYearByYearPowerCost[0])/12); 
+            
         	$scope.activeProject.calculationsData.existingMonthlyPowerUsage = commonFactory.toFormattedNumber(((Number(data.existingYearByYearPowerCost[0])/12).toFixed(2)/Number($scope.activeProject.power_cost_per_kWh)));
+            
         	$scope.activeProject.calculationsData.proposedMonthlyPowerUsage = commonFactory.toFormattedNumber(((Number(data.proposedYearByYearPowerCost[0])/12)/Number($scope.activeProject.power_cost_per_kWh)));
+            
         	$scope.activeProject.calculationsData.powerSavings = commonFactory.toFormattedNumber(Number(data.existingYearByYearPowerCost[0]) - Number(data.proposedYearByYearPowerCost[0]));
+            
         	$scope.activeProject.calculationsData.immediateMonthlySavingsExpedited = commonFactory.toFormattedNumber(
         		Number(data.existingYearlyMaintenanceCost)/12 + 
         		Number(data.existingYearByYearPowerCost[0])/12 - 

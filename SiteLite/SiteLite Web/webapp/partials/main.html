@@ -256,7 +256,7 @@
             <!-- Power Usage Now -->
             <div class="col-md-6">
               <div id="powerUsagePanel" class="panel panel-default">
-                <div class="panel-heading "><i class="fa fa-plug"></i> Power Usage For This Month</div>
+                <div class="panel-heading "><i class="fa fa-plug"></i> Monthly Power Usage</div>
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
@@ -282,7 +282,7 @@
             <!-- Maintenance Cost -->
             <div class="col-md-6">
               <div id="maintenanceCostPanel" class="panel panel-default">
-                <div class="panel-heading"><i class="fa fa-money"></i> Maintenance Cost For This Month</div>
+                <div class="panel-heading"><i class="fa fa-money"></i> Average Monthly Maintenance Cost</div>
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
@@ -296,7 +296,7 @@
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
                       </br><span class="text-muted small text-success"><em>LED Maintenance Cost:</em></span> </br>
-                     ${{ activeProject.calculationsData.monthlyLeasePaymentStandard}}
+                     $0.00
                     </div>
                     <div class="col-sm-6">
                       <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
@@ -308,7 +308,7 @@
             <!-- What is my Cost -->
             <div class="col-md-6">
               <div id="powerUsagePanel" class="panel panel-default">
-                <div class="panel-heading"><i class="fa fa-money"></i> Power Cost For This Month</div>
+                <div class="panel-heading"><i class="fa fa-money"></i> Monthly Power Cost</div>
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
@@ -425,11 +425,11 @@
                     <!-- Lease to Own -->
                     <div ng-if="paymentType == 'leaseToOwn'">
                       <div class="list-group">
-                        <a class="list-group-item">Total Price<span class="pull-right text-muted small"><em>
+                        <a class="list-group-item">Financed Amount<span class="pull-right text-muted small"><em>
                           <div ng-if="activeView == 'expeditedShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostExpedited) }}</div>
                           <div ng-if="activeView == 'standardShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostStandard) }}</div></em></span> 
                         </a>
-                        <a class="list-group-item">Lease Term<span class="pull-right text-muted small"><em>60 Months(5 years)</em></span> </a>
+                        <a class="list-group-item">Financing Period<span class="pull-right text-muted small"><em>60 Months (5 Years)</em></span> </a>
                         <div ng-if="activeView == 'expeditedShipping'">
                           <a class="list-group-item">Equivalent Annual Payment<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.yearlyLeasePaymentExpedited) }}</em></span> </a>
                         </div>
