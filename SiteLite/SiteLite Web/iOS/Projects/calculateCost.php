@@ -245,7 +245,7 @@
     $response["totalCostStandard"] = $response["productCostStandard"] + $response["installationCost"] + $response["salesTaxStandard"];
     $response["totalCostExpedited"] = $response["productCostExpedited"] + $response["installationCost"] + $response["salesTaxExpedited"];
     //Total Cost END ****************************************************************************************
-    
+
     //Total Lease Cost***************************************************************************************
     //Standard
     $response["totalLeaseCostStandard"] = $costs["financing_cost"] * $response["totalCostStandard"];
@@ -279,7 +279,7 @@
     
     //Tax Abandonment ***************************************************************************************
     $dateDifference = date("Y") - $dateOfServiceBind;
-    $taxAbandonment = $costs["abandonment_multiplier"] * ((1 - $dateDifference) / 39) * $sumExistingMaintenanceCost;
+    $taxAbandonment = $costs["abandonment_multiplier"] * (1 - $dateDifference / 39) * $sumExistingMaintenanceCost;
     if($taxAbandonment < 0)
     {
         $taxAbandonment = 0;
@@ -308,15 +308,69 @@
 
     //Existing Monthly kg Coal Usage ****************************************************************************
     
-    $response["existingKgCoal"] = $sumLegacyWattage * $costs["usage_hours"] * 0.12283503255128; 
+   $response["existingKgCoal"] = $sumLegacyWattage * $costs["usage_hours"] * 0.12283503255128 / 12; 
 
     //Existing Monthly kg Coal Usage END ************************************************************************
     
     //Proposed Monthly kg Coal Usage ****************************************************************************
     
-    $response["proposedKgCoal"] = $sumLEDWattage * $costs["usage_hours"] * 0.12283503255128; 
+   $response["proposedKgCoal"] = $sumLEDWattage * $costs["usage_hours"] * 0.12283503255128 / 12; 
 
     //Proposed Monthly kg Coal Usage END ************************************************************************
+
+   /*
+  
+    //Simple Payback Period Standard ****************************************************************************
+
+    $sumSavings = 0;
+
+    for ($year =1; $year <=10; $year++)
+    {
+        
+       
+        
+        if ($sumSavings < $response["totalCostStandard"])
+        {
+            $sumSavings += $arrayYearByYearSavings[$year];
+        }
+        
+        else if ( $sumSavings >= $response["totalCostStandard"])
+        {
+            $response["simplePaybackPeriodStandard"] = $sumSavings/$response["totalCostStandard"]*$year * 12;
+        }
+        
+    }
+    
+    //Simple Payback Period Standard  END ************************************************************************
+                     
+
+    //Simple Payback Period Expedited ****************************************************************************
+    
+    $sumSavings = 0;
+    
+
+    for ($year =1 ; $year <=10; $year++)
+    {
+        
+        
+        if ($sumSavings < $response["totalCostExpedited"])
+        {
+            $sumSavings += $arrayYearByYearSavings[$year];
+        }
+        
+        else ( $sumSavings >= $response["totalCostExpedited"])
+        {
+            $response["simplePaybackPeriodExpedited"] = $sumSavings/$response["totalCostExpedited"]*$year * 12;
+        }
+        
+    }
+    
+    //Simple Payback Period Expedited  END ************************************************************************
+                     
+     */               
+        
+
+
     
     //Format Currency to 2 decimal places
     $response["productCostStandard"] = number_format($response["productCostStandard"], 2, '.', '');
@@ -335,6 +389,8 @@
     $response["yearlyLeasePaymentExpedited"] = number_format($response["yearlyLeasePaymentExpedited"], 2, '.', '');
     $response["existingKgCoal"] = number_format($response["existingKgCoal"], 0, '.', '');
     $response["proposedKgCoal"] = number_format($response["proposedKgCoal"], 0, '.', '');
+    $response["simplePaybackPeriodStandard"] = 10 ;//number_format($response["simplePaybackPeriodStandard"], 0, '.', '');
+    $response["simplePaybackPeriodExpedited"] = 20 ;//number_format($response["simplePaybackPeriodExpedited"], 0, '.', '');
    
     
     $response["success"] = 1;
