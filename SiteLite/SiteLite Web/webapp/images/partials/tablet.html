@@ -21,9 +21,6 @@
             <button id="poBnt" type="button" class="btn btn-outline btn-primary">Project Overview</button>
           </div>
           <div class="btn-group">
-            <button id="ldBnt" type="button" class="btn btn-outline btn-primary">Light Drilldown</button>
-          </div>
-          <div class="btn-group">
             <button id="spBnt" type="button" class="btn btn-outline btn-primary">Sales Presentations</button>
           </div>
         </div>
@@ -116,48 +113,6 @@
             </div>  
           </div>
         </div>
-        <!-- Light Drilldown Panel -->
-        <div id="ldPanel" class="panel panel-default" style="margin-top: 10px; display:none;">
-          <div class="panel-heading">Light Drilldown</div>
-          <div class="panel-body">
-             <accordion>
-              <accordion-group ng-repeat="pole in activeProject.poles">
-                <accordion-heading>
-                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Pole {{ pole.poleID }}</div>
-                </accordion-heading>
-                <div class="col-md-9" >
-                  <div class="table-responsive table-bordered">
-                    <table class="table">
-                      <thead> <tr><th></th><th>Description</th><th>Number of Heads</th><th>Wattage</th></tr></thead>
-                      <tbody>
-                        <tr>  
-                          <td>Existing Fixture</td>
-                          <td>{{ pole.bulbDesc }} </td>
-                          <td>{{ pole.numOfHeads }}</td>
-                          <td>{{ pole.legWattage }}</td>
-                        </tr>
-                        <tr>  
-                          <td>Proposed Fixture</td>
-                          <td>{{ pole.LEDdesc }}</td>
-                          <td>{{ pole.numOfHeadsProposed }}</td>
-                          <td>{{ pole.LEDwattage }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div></br>
-                  <div class="alert alert-warning" ng-if="pole.bracket == 1 && pole.numOfHeadsProposed > 0">
-                      The proposed fixture requires the purchase of 
-                      <b>one {{ pole.numOfHeadsProposed }}<i>-arm</i></b>  bracket
-                  </div>
-                </div>
-                <div class="col-md-3 hidden-xs"><img src="http://ec2-54-165-80-46.compute-1.amazonaws.com/iOS/Images/{{ pole.poleID }}.jpg" class="img-thumbnail" style="width: 100%;" alt="Image Not Available"></img></div>
-              </accordion-group>
-            </accordion>
-         
-          </div>
-
-          </div>
-        </div>
         <!-- Sales Presentation Panel -->
         <div id="spPanel" class="panel panel-default" style="margin-top: 10px; display:none;">
           <div class="panel-heading"><i class="fa fa-shopping-cart"></i> Sales Presentation</div>
@@ -173,7 +128,7 @@
                 <h3 style="margin: 20px 0 40px 25px;">{{ activeProject.first_name }} {{ activeProject.last_name }}</br> <small><i>{{ activeProject.user_title }}</i></small></h3>
               </div>
             </div>
-           
+            
             <!-- Power Usage Now -->
             <div class="col-md-6">
               <div id="powerUsagePanel" class="panel panel-default">
@@ -216,7 +171,7 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Maintenance Cost:</em></span> </br>
+                      </br><span class="text-muted small text-success"><em>LED Lease Cost:</em></span> </br>
                      ${{ activeProject.calculationsData.monthlyLeasePaymentStandard}}
                     </div>
                     <div class="col-sm-6">
@@ -261,7 +216,7 @@
                     <div class="col-sm-8 footprint-row">
                       <h3 class="text-danger">Existing Footprint</h3>
                       <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
-                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>Kg</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
                     </div>
                     <div class="col-sm-4" style="padding: 25px;">
                       <img width="80%" style="max-width: 80px; min-width: 50px;" src="webapp/images/coal.png">
@@ -342,7 +297,7 @@
                   </accordion-group>
                   <accordion-group>
                     <accordion-heading> <div><i class="fa fa-credit-card"></i> Return on Investment</div> </accordion-heading>
-
+                    
                     <!-- Lease to Own -->
                     <div ng-if="paymentType == 'leaseToOwn'">
                       <div class="list-group">

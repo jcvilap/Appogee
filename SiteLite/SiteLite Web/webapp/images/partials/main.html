@@ -1,0 +1,502 @@
+<div>
+
+<!-- Navbar. TODO: Add support for login -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <!-- Nav Header -->
+  <div class="navbar-header">
+    <a class="navbar-brand" href="#"  onclick='location.reload();'>
+      <img width="220px" style="margin-top: -17px; margin-left: -13px;" class="img-responsive pull-left" id="logo" alt="ArkonLED" src="webapp/images/ArkonLED_Logo_Black_HighRes.jpg">
+    </a>
+  </div>
+  <!-- Nav Top Right Menus -->
+  <ul class="nav navbar-top-links navbar-right">
+    <li class="dropdown">
+      <a href="#" data-toggle="dropdown" class="dropdown-toggle" style="margin-top: 5px;">
+        <i class="fa fa-user fa-fw"></i>&nbsp; {{ credentials.mail }}<i class="fa fa-caret-down"></i> <span> &nbsp; &nbsp; &nbsp;</span>
+      </a>
+
+      <ul class="dropdown-menu dropdown-user">
+          <li ng-click="logout()" style="padding:3px 15px; cursor:pointer;"><i class="fa fa-sign-out fa-fw"></i> Logout</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- Google maps container -->
+<div id="map-canvas" class="hidden-xs"></div>
+<div class="container-fluid" id="main">
+  <div id="middleContainer" class="row">
+    <!-- Projects -->
+    <div id="tableContainer" class="col-sm-8" style="padding-top: 11px; padding-right: 20px;">
+      <!-- Header -->
+      <h3 id="activeProjectHeader" class="page-header"><i class="fa fa-minus-square-o" id="projectCrevron" style="font-size: 14px;"></i>
+        &nbsp;Existing Projects
+      </h3>
+      <div id="projectsPanel" class="panel panel-default" >
+        <div class="panel-heading">Projects</div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <!-- Projects table -->
+            <table class="table table-striped table-bordered table-hover display" id="projectsTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>Created on</th>
+                  <th>Lot area</th>
+                  <th>Power Cost</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="project in projects" on-finish-render="initTable()">  
+                  <td id="{{ project.project_ID }}" ng-click="loadDetails(project, $event)" class="idRow"><a>{{ project.project_ID }}</a></td>
+                  <td>{{ project.project_name }}</td>
+                  <td>{{ project.date_opened }}</td>
+                  <td>{{ project.lot_area }}</td>
+                  <td>${{ project.power_cost_per_kWh }} /kWh</td>
+                  <td>{{ project.city }}</td>
+                  <td>{{ project.state }}</td>
+                  <td ng-switch on="project.status_description">
+                    <span ng-switch-when="ACTIVE" class="badge alert-success">{{ project.status_description }}</span>
+                    <span ng-switch-when="INACTIVE" class="badge alert-info">{{ project.status_description }}</span>
+                    <span ng-switch-when="CLOSED" class="badge alert-danger">{{ project.status_description }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Project Details -->
+    <div id="detailsContainer" class="col-sm-8" style="display:none; padding-top: 10px; padding-right: 20px; margin-top: -10px;">
+      <h3 id="detailsPanelHeader" class="page-header"><i class="fa fa-minus-square-o" id="detailsCrevron" style="font-size: 14px;"></i>
+        &nbsp;Project {{ activeProject.project_ID }} Details 
+        <div class="pull-right" ng-switch on="activeProject.status_description">
+            <span ng-switch-when="ACTIVE" class="badge alert-success">{{ activeProject.status_description }}</span>
+            <span ng-switch-when="INACTIVE" class="badge alert-info">{{ activeProject.status_description }}</span>
+            <span ng-switch-when="CLOSED" class="badge alert-danger">{{ activeProject.status_description }}</span>
+        </div>
+      </h3>
+      <div id="detailMiddleContainer">
+        <!-- Control Group Buttons-->
+        <div class="btn-group btn-group-justified hidden-xs">
+          <div class="btn-group">
+            <button id="poBnt" type="button" class="btn btn-outline btn-primary">Project Overview</button>
+          </div>
+          <div class="btn-group">
+            <button id="ldBnt" type="button" class="btn btn-outline btn-primary">Light Drilldown</button>
+          </div>
+          <div class="btn-group">
+            <button id="spBnt" type="button" class="btn btn-outline btn-primary">Sales Presentations</button>
+          </div>
+        </div>
+        <!-- Project Overview Panel-->
+        <div id="poPanel" class="panel panel-default" style="margin-top: 10px;">
+          <div class="panel-heading"> <i class="fa fa-bars fa-fw"></i> Project Overview </div>
+          <div class="panel-body">
+            <!-- Project Details -->
+            <div class="col-md-6">
+              <div class="list-group">
+                <a class="list-group-item"> <h4> {{ activeProject.project_name }} </h4></a>
+                <a class="list-group-item"> <i class="fa fa-user fa-fw"></i> Contact Name 
+                  <span class="pull-right text-muted small"><em>{{ activeProject.contact_name }} </em></span>
+                </a>
+                <a class="list-group-item">
+                  <i class="fa fa-map-marker fa-fw"></i> City
+                  <span class="pull-right text-muted small"><em>{{ activeProject.city }}, {{ activeProject.state }}</em> </span>
+                </a>
+                <a class="list-group-item">
+                  <i class="fa fa-phone fa-fw"></i> Phone
+                  <span class="pull-right text-muted small"><em>{{ activeProject.contact_phone }}</em> </span>
+                </a>
+                <a class="list-group-item">
+                  <i class="fa fa-envelope fa-fw"></i> Email Address
+                  <span class="pull-right text-muted small"><em>{{ activeProject.contact_email }}</em> </span>
+                </a>
+                <a class="list-group-item">
+                  <i class="fa fa-calendar fa-fw"></i> Date Created
+                  <span class="pull-right text-muted small"><em>{{ activeProject.date_opened }}</em> </span>
+                </a>
+                <a class="list-group-item">
+                  <i class="fa fa-area-chart fa-fw"></i> Lot Area
+                  <span class="pull-right text-muted small"><em>{{ activeProject.lot_area }} sq ft</em> </span>
+                </a>
+                <a class="list-group-item" href="#">
+                  <i class="fa fa-bolt fa-fw"></i> Power Cost
+                  <span class="pull-right text-muted small"><em>${{ activeProject.power_cost_per_kWh }} /kWh</em> </span>
+                </a>
+              </div>
+            </div>
+            <!-- Comments Area --> 
+            <div class="col-md-6" >
+              </br>
+              <div><b>&nbsp;Comments...</b>&nbsp;&nbsp;
+                <i class="fa fa-pencil-square-o action-icon" title="Edit"></i>
+                <i class="fa fa-floppy-o action-icon" title="Save" style="display:none"></i>
+              </div>
+              <textarea id="commentsArea" styles="height:100%" class="bs-callout bs-callout-warning col-sm-12"  disabled="">
+                {{ activeProject.comments }}
+              </textarea>
+            </div>
+            <!-- Light Fixtures Table -->
+            <div class="panel panel-default col-sm-12" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
+              <div class="panel-heading"> Light Fixtures: </div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead> <tr><th>Part No.</th><th>Description</th><th>Unit Cost</th><th>Quantity</th></tr> </thead>
+                    <tbody>
+                      <tr ng-repeat="pole in activeProject.lightFixtureTablePoles">  
+                        <td>{{ pole.LEDpartNumber }}</td>
+                        <td>{{ pole.LEDdesc }}</td>
+                        <td>${{ pole.LEDunitCost }}</td>
+                        <td>{{ pole.numOfHeadsProposed}}</td>
+                      </tr>
+                      <tr class="alert alert-success" >
+                        <td></td>
+                        <td><b>Totals</b></td>
+                        <td>${{ activeProject.lightFixtureTotalUnitCost }}</td>
+                        <td>{{ activeProject.lightFixtureTotalQuantity }} </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- Brakets/Others Table -->  
+            <div class="panel panel-default col-sm-12" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
+              <div class="panel-heading"> Brackets/Others: </div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead> <tr><th>Part No.</th><th>Description</th><th>Unit Cost</th><th>Quantity</th></tr> </thead>
+                    <tbody>
+                      <!-- <tr ng-repeat="pole in activeProject.poles">  --> 
+                      <tr>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                      </tr>
+                      <tr class="success" >
+                        <td></td>
+                        <td><b>Totals</b></td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>  
+          </div>
+        </div>
+        <!-- Light Drilldown Panel -->
+        <div id="ldPanel" class="panel panel-default" style="margin-top: 10px; display:none;">
+          <div class="panel-heading">Light Drilldown</div>
+          <div class="panel-body">
+             <accordion>
+              <accordion-group ng-repeat="pole in activeProject.poles">
+                <accordion-heading>
+                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Pole {{ pole.poleID }}</div>
+                </accordion-heading>
+                <div class="col-md-9" >
+                  <div class="table-responsive table-bordered">
+                    <table class="table">
+                      <thead> <tr><th></th><th>Description</th><th>Number of Heads</th><th>Wattage</th></tr></thead>
+                      <tbody>
+                        <tr>  
+                          <td>Existing Fixture</td>
+                          <td>{{ pole.bulbDesc }} </td>
+                          <td>{{ pole.numOfHeads }}</td>
+                          <td>{{ pole.legWattage }}</td>
+                        </tr>
+                        <tr>  
+                          <td>Proposed Fixture</td>
+                          <td>{{ pole.LEDdesc }}</td>
+                          <td>{{ pole.numOfHeadsProposed }}</td>
+                          <td>{{ pole.LEDwattage }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div></br>
+                  <div class="alert alert-warning" ng-if="pole.bracket == 1 && pole.numOfHeadsProposed > 0">
+                      The proposed fixture requires the purchase of 
+                      <b>one {{ pole.numOfHeadsProposed }}<i>-arm</i></b>  bracket
+                  </div>
+                </div>
+                <div class="col-md-3 hidden-xs"><img src="http://ec2-54-165-80-46.compute-1.amazonaws.com/iOS/Images/{{ pole.poleID }}.jpg" class="img-thumbnail" style="width: 100%;" alt="Image Not Available"></img></div>
+              </accordion-group>
+            </accordion>
+         
+          </div>
+
+          </div>
+        </div>
+        <!-- Sales Presentation Panel -->
+        <div id="spPanel" class="panel panel-default" style="margin-top: 10px; display:none;">
+          <div class="panel-heading"><i class="fa fa-shopping-cart"></i> Sales Presentation</div>
+          <div class="panel-body">
+            <!-- Presentation Header -->
+            <div class="row">
+              <!-- Logo (offset)-->
+              <div class="col-md-3 pull-right">
+                <img width="220px" style="margin: 20px 25px 0 0;" class="img-responsive pull-right" id="logo" alt="Image" src="webapp/images/ArkonLED_Logo_HighRes.jpg">
+              </div>
+              <!-- User -->
+              <div class="col-md-4">
+                <h3 style="margin: 20px 0 40px 25px;">{{ activeProject.first_name }} {{ activeProject.last_name }}</br> <small><i>{{ activeProject.user_title }}</i></small></h3>
+              </div>
+            </div>
+            
+            <!-- Power Usage Now -->
+            <div class="col-md-6">
+              <div id="powerUsagePanel" class="panel panel-default">
+                <div class="panel-heading "><i class="fa fa-plug"></i> Monthly Power Usage</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.existingMonthlyPowerUsage }} kWh
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingPowerUsage" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.proposedMonthlyPowerUsage }} kWh
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedPowerUsage" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            <!-- Maintenance Cost -->
+            <div class="col-md-6">
+              <div id="maintenanceCostPanel" class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-money"></i> Average Monthly Maintenance Cost</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Maintenance Cost:</em></span> </br>
+                     $0.00
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            <!-- What is my Cost -->
+            <div class="col-md-6">
+              <div id="powerUsagePanel" class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-money"></i> Monthly Power Cost</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyPowerCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingPowerCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.proposedMonthlyPowerCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedPowerCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            <!-- Carbon Footprint -->
+            <div class="col-md-6">
+              <div class="panel panel-default" id="powerUsagePanel">
+                <div class="panel-heading"><img width="18px" src="webapp/images/footprint.ico" style="">Monthly Carbon Footprint</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-8 footprint-row">
+                      <h3 class="text-danger">Existing Footprint</h3>
+                      <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
+                    </div>
+                    <div class="col-sm-4" style="padding: 25px;">
+                      <img width="80%" style="max-width: 80px; min-width: 50px;" src="webapp/images/coal.png">
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-8 footprint-row">
+                      <h3 class="text-success">LED Footprint</h3>
+                      <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.proposedKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
+                    </div>
+                    <div class="col-sm-4" style="padding: 50px;">
+                      <img width="60%" style="max-width:50px; min-width: 30px;" src="webapp/images/coal.png">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+
+            <!-- Options Row -->
+            <div class="col-md-12" style="padding:20px 60px 30px 60px">
+              <!-- Radios #2 -->
+              <div class="col-md-4" style="margin-top:10px;">
+                <div class="btn-group btn-group-justified hidden-xs">
+                  <div class="btn-group">
+                    <button id="upFrontPurchaseBt" class="btn btn-outline btn-primary" type="button" ng-click="paymentType='upFrontPurchase'"> Upfront Purchase</button>
+                  </div>
+                  <div class="btn-group">
+                    <button id="leaseToOwnBt" class="btn btn-outline btn-primary radio-btn-selected" type="button" ng-click="paymentType='leaseToOwn'"> Lease To Own</button>
+                  </div>
+                </div>
+              </div>
+              <!-- Radios #1 -->
+              <div class="col-md-4 col-md-offset-4" style="margin-top:10px;">  
+                <div class="btn-group btn-group-justified hidden-xs">
+                  <div class="btn-group">
+                    <button id="expeditedShippingBt" class="btn btn-outline btn-primary" type="button" ng-click="activeView='expeditedShipping'"> Expedited Shipping</button>
+                  </div>
+                  <div class="btn-group">
+                    <button id="standardShippingBt" class="btn btn-outline btn-primary radio-btn-selected" type="button" ng-click="activeView='standardShipping'"> Standard Shipping</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+            <!-- Chart Row -->
+            <div class="row">
+              <!-- Costs Accordion-->
+              <div class="col-md-4">
+                <accordion>
+                  <accordion-group is-open="true">
+                    <accordion-heading> <div><i class="fa fa-usd"></i> Costs </div> </accordion-heading>
+                    <div ng-if="activeView == 'standardShipping'">
+                      <div class="list-group">
+                        <a class="list-group-item">Product<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.productCostStandard) }}</em></span> </a>
+                        <a class="list-group-item">Installation<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.installationCost) }}</em></span> </a>
+                        <a class="list-group-item">Sales Tax<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.salesTaxStandard) }}</em></span> </a>
+                        <a class="list-group-item total"><b>Total Costs</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.totalCostStandard) }}</b></em></span></a>
+                      </div>
+                    </div>
+                    <div ng-if="activeView == 'expeditedShipping'">
+                      <div class="list-group">
+                        <a class="list-group-item">Product<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.productCostExpedited) }}</em></span> </a>
+                        <a class="list-group-item">Installation<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.installationCost) }}</em></span> </a>
+                        <a class="list-group-item">Sales Tax<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.salesTaxExpedited) }}</em></span> </a>
+                        <a class="list-group-item total"><b>Total Costs</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.totalCostExpedited) }}</b></em></span></a>
+                      </div>
+                    </div>
+                  </accordion-group>
+                  <accordion-group>
+                    <accordion-heading> <div><i class="fa fa-check-square-o"></i> Benefits </div> </accordion-heading>
+                    <div class="list-group">
+                      <a class="list-group-item">Power Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.powerSavings }}</em></span> </a>
+                      <a class="list-group-item">Maintenance Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.existingYearlyMaintenanceCost }}</em></span> </a>
+                      <a class="list-group-item">Abandonment Tax Rebate<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.taxAbandonment) }}</em></span> </a>
+                      <a class="list-group-item total"><b>Total Savings</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.yearByYearSavings[0]) }}</b></em></span></a>
+                    </div>
+                  </accordion-group>
+                  <accordion-group>
+                    <accordion-heading> <div><i class="fa fa-credit-card"></i> Return on Investment</div> </accordion-heading>
+
+                    <!-- Lease to Own -->
+                    <div ng-if="paymentType == 'leaseToOwn'">
+                      <div class="list-group">
+                        <a class="list-group-item">Financed Amount<span class="pull-right text-muted small"><em>
+                          <div ng-if="activeView == 'expeditedShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostExpedited) }}</div>
+                          <div ng-if="activeView == 'standardShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostStandard) }}</div></em></span> 
+                        </a>
+                        <a class="list-group-item">Financing Period<span class="pull-right text-muted small"><em>60 Months (5 Years)</em></span> </a>
+                        <div ng-if="activeView == 'expeditedShipping'">
+                          <a class="list-group-item">Equivalent Annual Payment<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.yearlyLeasePaymentExpedited) }}</em></span> </a>
+                        </div>
+                        <div ng-if="activeView == 'standardShipping'">
+                          <a class="list-group-item">Equivalent Annual Payment<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.yearlyLeasePaymentStandard) }}</em></span> </a>
+                        </div>
+                        <a class="list-group-item"><b>Monthly Payment</b><span class="pull-right"><em><b>
+                          <div ng-if="activeView == 'expeditedShipping'">${{ activeProject.calculationsData.monthlyLeasePaymentExpedited }}</div>
+                          <div ng-if="activeView == 'standardShipping'">${{ activeProject.calculationsData.monthlyLeasePaymentStandard }}</div>
+                          </b></em></span>
+                        </a>
+                        <div ng-if="activeView == 'expeditedShipping'">
+                          <a class="list-group-item total"><b>Immediate Monthly Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsExpedited }}</b></em></span></a>
+                        </div>
+                        <div ng-if="activeView == 'standardShipping'">
+                          <a class="list-group-item total"><b>Immediate Monthly Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsStandard }}</b></em></span></a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Upfront Purchase -->
+                    <div ng-if="paymentType == 'upFrontPurchase'">
+                      <div class="list-group">
+                        <a class="list-group-item">Total Price<span class="pull-right text-muted small"><em>
+                          <div ng-if="activeView == 'expeditedShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostExpedited) }}</div>
+                          <div ng-if="activeView == 'standardShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostStandard) }}</div></em></span> 
+                        </a>
+                        <div ng-if="activeView == 'expeditedShipping'">
+                          <a class="list-group-item total"><b>Simple Payback Period</b><span class="pull-right"><em><b>{{ activeProject.calculationsData.simplePaybackPeriodExpedited }}</b> Months</em></span></a>
+                        </div>
+                        <div ng-if="activeView == 'standardShipping'">
+                          <a class="list-group-item total"><b>Simple Payback Period</b><span class="pull-right"><em><b>{{ activeProject.calculationsData.simplePaybackPeriodStandard }}</b> Months</em></span></a>
+                        </div>
+                      </div>
+                    </div>
+
+                  </accordion-group>
+                </accordion>
+              </div>
+              <!-- Area Chart -->
+              <div class="col-md-8">
+                <div id="areaChart" class="panel panel-default">
+                  <div class="panel-heading"><i class="fa fa-bar-chart-o fa-fw"></i> Cost Comparison</div>
+                  <div class="panel-body">
+                    <div class="col-sm-12">
+                      <h3 style="margin: 0"><i class="timeline-badge fa fa-check"></i>Total Savings:<small style="margin:10px;"> $ {{ activeProject.totalSavings }}</small> </h3>
+                    </div>
+                    <div class="col-sm-12">
+                      <div id="morris-area-chart"></div>
+                    </div>
+                    <div class="col-sm-12" style="margin: 15px 15px 15px 0px; font-size: 11px;">
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3 "><span class="leyend label" style="background-color: LimeGreen;"> </span>LED Lease Costs</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: DarkSeaGreen;"> </span>LED Power Consumption</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: Brown;"> </span>Maintenance Costs</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: DarkSalmon;"> </span>Existing Power Consumption</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>  
+        </div>
+    </div> 
+    <!-- map-canvas container-->
+    <div class="col-sm-4"></div>
+  </div>
+</div>
+
+</div>
