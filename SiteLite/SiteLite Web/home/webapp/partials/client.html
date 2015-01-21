@@ -123,7 +123,7 @@
              <accordion>
               <accordion-group ng-repeat="pole in activeProject.poles">
                 <accordion-heading>
-                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Pole {{ pole.poleID }}</div>
+                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Fixture {{ pole.markerNum}}</div>
                 </accordion-heading>
                 <div class="col-md-9" >
                   <div class="table-responsive table-bordered">

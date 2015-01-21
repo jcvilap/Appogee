@@ -202,7 +202,7 @@
              <accordion>
               <accordion-group ng-repeat="pole in activeProject.poles">
                 <accordion-heading>
-                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Pole {{ pole.poleID }}</div>
+                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Fixture {{ pole.markerNum }}</div>
                 </accordion-heading>
                 <div class="col-md-9" >
                   <div class="table-responsive table-bordered">
@@ -416,7 +416,7 @@
                     <div class="list-group">
                       <a class="list-group-item">Power Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.powerSavings }}</em></span> </a>
                       <a class="list-group-item">Maintenance Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.existingYearlyMaintenanceCost }}</em></span> </a>
-                      <a class="list-group-item">Abandonment Tax Rebate<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.taxAbandonment) }}</em></span> </a>
+                      <a class="list-group-item">Abandonment Tax Rebate*<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.taxAbandonment) }}</em></span> </a>
                       <a class="list-group-item total"><b>Total Savings</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.yearByYearSavings[0]) }}</b></em></span></a>
                     </div>
                   </accordion-group>
