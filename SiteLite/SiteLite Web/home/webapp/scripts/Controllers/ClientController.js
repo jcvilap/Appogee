@@ -183,14 +183,14 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 				         		  { "color": "#fdd400", "endValue":  maintenanceCostInterval*4, "innerRadius": "92%", "startValue":  maintenanceCostInterval*2 },
 				         		  { "color": "#cc4748", "endValue":  maintenanceCostInterval*6, "innerRadius": "90%", "startValue":  maintenanceCostInterval*4 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.monthlyLeasePaymentStandard,
+				        "bottomText": 0.00,
 				        "bottomTextYOffset": 8,
 				        "endValue": maintenanceCostInterval*6
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-          		proposedMaintenanceCostChart.arrows[0].setValue( calculationsData.monthlyLeasePaymentStandard);
+          		proposedMaintenanceCostChart.arrows[0].setValue(0);
 
 				$("#proposedPowerUsage a").remove();
 				$("#existingPowerUsage a").remove();

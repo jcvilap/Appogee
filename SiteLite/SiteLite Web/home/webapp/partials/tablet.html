@@ -155,33 +155,7 @@
                 </div>
               </div> 
             </div>
-            <!-- Maintenance Cost -->
-            <div class="col-md-6">
-              <div id="maintenanceCostPanel" class="panel panel-default">
-                <div class="panel-heading"><i class="fa fa-money"></i> Average Monthly Maintenance Cost</div>
-                <div class="panel-body">
-                  <div class="col-sm-12 gadget-list-item">
-                    <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
-                    </div>
-                    <div class="col-sm-6">
-                      <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
-                    </div>
-                  </div>
-                  <div class="col-sm-12 gadget-list-item">
-                    <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Lease Cost:</em></span> </br>
-                     ${{ activeProject.calculationsData.monthlyLeasePaymentStandard}}
-                    </div>
-                    <div class="col-sm-6">
-                      <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </div> 
-            </div>
-            <!-- What is my Cost -->
+    <!-- What is my Cost -->
             <div class="col-md-6">
               <div id="powerUsagePanel" class="panel panel-default">
                 <div class="panel-heading"><i class="fa fa-money"></i> Monthly Power Cost</div>
@@ -235,6 +209,33 @@
                 </div>
               </div>
             </div> 
+            <!-- Maintenance Cost -->
+            <div class="col-md-6">
+              <div id="maintenanceCostPanel" class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-money"></i> Average Monthly Maintenance Cost</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Maintenance Cost:</em></span> </br>
+                     $0.00
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            
 
             <!-- Options Row -->
             <div class="col-md-12" style="padding:20px 60px 30px 60px">
