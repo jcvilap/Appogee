@@ -499,7 +499,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		var groupedPoles = new Array(); 
         for (i = 0; i < data.length; i++) { 
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
-        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost);
+        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed);
             // Extract elements with the same LEDpartNumber 
             var group = _.where(data, {LEDpartNumber: data[i].LEDpartNumber});
             // Check if group was not added already to groupedPoles list
