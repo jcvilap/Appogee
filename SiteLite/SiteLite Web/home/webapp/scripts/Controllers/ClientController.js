@@ -438,7 +438,7 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
                     };
                     var auxPole = _.pick(group[0], 'LEDpartNumber', 'LEDdesc', 'LEDunitCost', 'numOfHeadsProposed');
                     auxPole['numOfHeadsProposed'] = totalQuantity; 
-                    auxPole['LEDunitCost'] = unitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+                    //auxPole['LEDunitCost'] = unitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
                     groupedPoles.push(auxPole);
                 }
             }
