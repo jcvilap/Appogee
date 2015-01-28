@@ -476,7 +476,7 @@
                   <div class="panel-heading"><i class="fa fa-bar-chart-o fa-fw"></i> Cost Comparison</div>
                   <div class="panel-body">
                     <div class="col-sm-12">
-                      <h3 style="margin: 0"><i class="timeline-badge fa fa-check"></i>Total Savings:<small style="margin:10px;"> $ {{ activeProject.totalSavings }}</small> </h3>
+                      <h2 style="margin: 0"><i class="timeline-badge fa fa-check"></i>Total Savings:<notsmall style="margin:10px;"> $ {{ activeProject.totalSavings }}</notsmall> </h2>
                     </div>
                     <div class="col-sm-12">
                       <div id="morris-area-chart"></div>
@@ -490,6 +490,29 @@
                   </div>
                 </div>
               </div>
+                
+                <!-- Current Monthly Operating Cost -->
+            <div class="col-md-6">
+              <div id="powerUsagePanel" class="panel panel-default">
+                <div class="panel-heading "><i class="fa fa-plug"></i> Current Monthly Operating Cost</div>
+                <div class="panel-body">
+                 
+                    
+                    
+                    
+                </div>
+              </div> 
+            </div>
+<!-- Proposed Monthly Operating Cost -->
+            <div class="col-md-6">
+              <div id="powerUsagePanel" class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-money"></i> Proposed Monthly Operating Cost</div>
+                <div class="panel-body">
+                    <!-- <div id="proposedMonthlyOperatingCost" style="height:200px; width : 100%;"></div> -->
+                  
+                </div>
+              </div> 
+            </div>
             </div>
 
           </div>  

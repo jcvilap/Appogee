@@ -184,6 +184,10 @@ table.dataTable thead .sorting_desc:after {
     font-size: 80%;
 }
 
+.notsmall {
+    font-size: 100%;
+}
+
 .footprint-row {
     padding-bottom: 33px;
     padding-left: 25px;
