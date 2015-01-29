@@ -172,14 +172,14 @@ arkonLEDApp.controller('TabletController',function ($scope, $http, $routeParams,
 				         		  { "color": "#fdd400", "endValue":  maintenanceCostInterval*4, "innerRadius": "92%", "startValue":  maintenanceCostInterval*2 },
 				         		  { "color": "#cc4748", "endValue":  maintenanceCostInterval*6, "innerRadius": "90%", "startValue":  maintenanceCostInterval*4 }
 				         ],
-				        "bottomText":0.00,
+				        "bottomText": $scope.activeProject.calculationsData.monthlyLeasePaymentStandard,
 				        "bottomTextYOffset": 8,
 				        "endValue": maintenanceCostInterval*6
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-          		proposedMaintenanceCostChart.arrows[0].setValue(0);
+          		proposedMaintenanceCostChart.arrows[0].setValue( calculationsData.monthlyLeasePaymentStandard);
 
 
 				$("#proposedPowerUsage a").remove();
@@ -408,7 +408,7 @@ arkonLEDApp.controller('TabletController',function ($scope, $http, $routeParams,
 		var groupedPoles = new Array(); 
         for (i = 0; i < data.length; i++) { 
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
-        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed);
+        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost);
             // Extract elements with the same LEDpartNumber 
             var group = _.where(data, {LEDpartNumber: data[i].LEDpartNumber});
             // Check if group was not added already to groupedPoles list
@@ -430,7 +430,7 @@ arkonLEDApp.controller('TabletController',function ($scope, $http, $routeParams,
                     };
                     var auxPole = _.pick(group[0], 'LEDpartNumber', 'LEDdesc', 'LEDunitCost', 'numOfHeadsProposed');
                     auxPole['numOfHeadsProposed'] = totalQuantity; 
-                    //auxPole['LEDunitCost'] = unitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+                    auxPole['LEDunitCost'] = unitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
                     groupedPoles.push(auxPole);
                 }
             }

@@ -63,7 +63,7 @@ config(['$routeProvider', function($routeProvider) {
     }).
     when('/login', {
         templateUrl: 'webapp/partials/login.html',
-        controller: 'LoginController'
+        controller: 'myController'
     }).
     otherwise({
         redirectTo: '/'

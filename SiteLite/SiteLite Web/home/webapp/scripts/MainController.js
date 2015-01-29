@@ -1,40 +1,57 @@
-arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams, projectsFactory, commonFactory, loginFactory){
-	$scope.params = $routeParams;
-	$scope.activeView = 'standardShipping';
+arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory){
+	$scope.activeView = 'expeditedShipping';
 	$scope.paymentType = 'leaseToOwn';
 	var calculationsData = null;
 	$scope.projects = [];
 	$scope.activeProject = null;
-	$scope.areaChartCreated = false;
-
-	$scope.toFormattedNumber = commonFactory.toFormattedNumber;
-
 	projectsFactory.getProjects(function(data){
 		$scope.projects = data;
-		var group = _.where(data, {project_ID: Number($scope.params.projectId)});
-		if(group.length == 1){
-			$scope.loadDetails(group[0]);
-		}
-		else {
-			$("#main").html('<div class="alert alert-danger"><b> Project ' + $scope.params.projectId + ' does not exist in our records!</b></div>');
-		}
 	});
 
-	$("body").css('padding-top', '0');
+	// Infowindox on click -- Load project
+    $(document).on('click', '.infoW', function(e){
+        var str = $(this).attr("id");
+        var id = str.substring(10, str.length);
+        $("#" + id).trigger('click');
+    });
+
+    $(".action-icon").click(function(){
+    	// Edit
+    	if($(this).hasClass("fa-pencil-square-o")){
+    		$(this).hide();
+    		$(".fa-floppy-o").show();
+			$("#commentsArea").prop('disabled', false).focus();
+
+    	}
+
+    	else{
+    		var value = $("#commentsArea").val();
+    		// TODO Test
+    		$http.post('iOS/Projects/updateProject.php', {
+    			comments: value
+    		});
+    		$(this).hide();
+    		$(".fa-pencil-square-o").show();
+    		$("#commentsArea").prop('disabled', true);
+    	}
+    });
 
     // Toggle Detail Panels
     $('#poBnt').click(function(){ 
     	$('#ldPanel').hide(); 
     	$('#spPanel').hide(); 
     	$('#detailsContainer').switchClass( "col-sm-12", "col-sm-8", 1000, "easeInOutQuad", function(){
+    		$('#tableContainer').show();
     		$('#map-canvas').show();
     	});
     	$('#poPanel').slideDown("slow"); 
+
     });
     $('#ldBnt').click(function(){ 
     	$('#poPanel').hide(); 
     	$('#spPanel').hide(); 
     	$('#detailsContainer').switchClass( "col-sm-12", "col-sm-8", 1000, "easeInOutQuad", function(){
+    		$('#tableContainer').show();
     		$('#map-canvas').show();
     	});
     	$('#ldPanel').slideDown("slow"); 
@@ -44,6 +61,7 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
     	$('#ldPanel').hide(); 
 
     	// Extra DOM manipulation when going to the sale s presentation. Revert back when clicking out this button
+    	$('#tableContainer').hide();
     	$('#map-canvas').hide();
     	$('#spPanel').slideDown("slow"); 
 
@@ -57,33 +75,31 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 					xkey: 'year',
 					ykeys: ['existingMantenanceCost', 'existingPowerCost', 'LEDLeasePayment', 'proposedPowerCost'],
 					labels: ['Maintenance Costs', 'Existing Power Consuption', 'LED Lease Costs', 'LED Power Consuption'],
-					lineColors: ['Brown','DarkSalmon ','LimeGreen','DarkSeaGreen'],
+					lineColors: ['DarkSalmon ', 'Brown', 'DarkSeaGreen', 'LimeGreen'],
 					pointSize: 2,
 					hideHover: 'auto',
 					resize: true,
 					behaveLikeLine: true
 				});
 
-	    		var powerUsageInterval= (((Number(calculationsData.existingYearByYearPowerCost[0])/12).toFixed(2)/Number($scope.activeProject.power_cost_per_kWh))/5).toFixed(0);
 	    		var existingPowerUsageChart = AmCharts.makeChart("existingPowerUsage", {
 				    "type": "gauge",  
 				    "axes": [{
 				        "axisThickness":1,
 				        "axisAlpha":1,
 				        "tickAlpha":0,
-				        "valueInterval":powerUsageInterval,
-				        "bands": [{  "color": "#84b761",  "endValue": powerUsageInterval*2, "innerRadius": "93%", "startValue": 0 },
-				         		  { "color": "#fdd400", "endValue": powerUsageInterval*4, "innerRadius": "92%", "startValue": powerUsageInterval*2 },
-				         		  { "color": "#cc4748", "endValue": powerUsageInterval*6, "innerRadius": "90%", "startValue": powerUsageInterval*4 }
+				        "valueInterval":40,
+				        "bands": [{  "color": "#84b761",  "endValue": 90, "innerRadius": "93%", "startValue": 0 },
+				         		  { "color": "#fdd400", "endValue": 130, "innerRadius": "92%", "startValue": 90 },
+				         		  { "color": "#cc4748", "endValue": 220, "innerRadius": "90%", "startValue": 130 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.existingMonthlyPowerUsage,
+				        "bottomText": $scope.activeProject.calculationsData.existingMonthlyPowerUsage + "W",
 				        "bottomTextYOffset": 8,
-				        "endValue": powerUsageInterval*6
+				        "endValue": 220
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-	    		existingPowerUsageChart.arrows[0].setValue(powerUsageInterval*5);
 
 				var proposedPowerUsageChart = AmCharts.makeChart("proposedPowerUsage", {
 				    "type": "gauge",   
@@ -91,42 +107,37 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 				        "axisThickness":1,
 				        "axisAlpha":1,
 				        "tickAlpha":0,
-				        "valueInterval":powerUsageInterval,
-				        "bands": [{  "color": "#84b761",  "endValue": powerUsageInterval*2, "innerRadius": "93%", "startValue": 0 },
-				         		  { "color": "#fdd400", "endValue": powerUsageInterval*4, "innerRadius": "92%", "startValue": powerUsageInterval*2 },
-				         		  { "color": "#cc4748", "endValue": powerUsageInterval*6, "innerRadius": "90%", "startValue": powerUsageInterval*4 }
+				        "valueInterval":40,
+				        "bands": [{  "color": "#84b761",  "endValue": 90, "innerRadius": "93%", "startValue": 0 },
+				         		  { "color": "#fdd400", "endValue": 130, "innerRadius": "92%", "startValue": 90 },
+				         		  { "color": "#cc4748", "endValue": 220, "innerRadius": "90%", "startValue": 130 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.proposedMonthlyPowerUsage,
+				        "bottomText": $scope.activeProject.calculationsData.proposedMonthlyPowerUsage + "W",
 				        "bottomTextYOffset": 8,
-				        "endValue": powerUsageInterval*6
+				        "endValue": 220
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-				proposedPowerUsageChart.arrows[0].setValue(
-					(Number(calculationsData.proposedYearByYearPowerCost[0])/12)/(Number($scope.activeProject.power_cost_per_kWh))
-				);
 
-				var powerCostInterval = ((Number(calculationsData.existingYearByYearPowerCost[0])/12)/5).toFixed(0);
 				var existingPowerCostChart = AmCharts.makeChart("existingPowerCost", {
 				    "type": "gauge",   
 				    "axes": [{
 				        "axisThickness":1,
 				        "axisAlpha":1,
 				        "tickAlpha":0,
-				        "valueInterval":powerCostInterval,
-				        "bands": [{  "color": "#84b761",  "endValue": powerCostInterval*2, "innerRadius": "93%", "startValue": 0 },
-				         		  { "color": "#fdd400", "endValue": powerCostInterval*4, "innerRadius": "92%", "startValue": powerCostInterval*2 },
-				         		  { "color": "#cc4748", "endValue": powerCostInterval*6, "innerRadius": "90%", "startValue": powerCostInterval*4 }
+				        "valueInterval":40,
+				        "bands": [{  "color": "#84b761",  "endValue": 90, "innerRadius": "93%", "startValue": 0 },
+				         		  { "color": "#fdd400", "endValue": 130, "innerRadius": "92%", "startValue": 90 },
+				         		  { "color": "#cc4748", "endValue": 220, "innerRadius": "90%", "startValue": 130 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.existingMonthlyPowerCost,
+				        "bottomText": "$" + $scope.activeProject.calculationsData.existingMonthlyPowerCost,
 				        "bottomTextYOffset": 8,
-				        "endValue": powerCostInterval*6
+				        "endValue": 220
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-				existingPowerCostChart.arrows[0].setValue(powerCostInterval*5);
 
 				var proposedPowerCostChart = AmCharts.makeChart("proposedPowerCost", {
 				    "type": "gauge",   
@@ -134,43 +145,37 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 				        "axisThickness":1,
 				        "axisAlpha":1,
 				        "tickAlpha":0,
-				        "valueInterval":powerCostInterval,
-				        "bands": [{  "color": "#84b761",  "endValue": powerCostInterval*2, "innerRadius": "93%", "startValue": 0 },
-				         		  { "color": "#fdd400", "endValue": powerCostInterval*4, "innerRadius": "92%", "startValue": powerCostInterval*2 },
-				         		  { "color": "#cc4748", "endValue": powerCostInterval*6, "innerRadius": "90%", "startValue": powerCostInterval*4 }
+				        "valueInterval":40,
+				        "bands": [{  "color": "#84b761",  "endValue": 90, "innerRadius": "93%", "startValue": 0 },
+				         		  { "color": "#fdd400", "endValue": 130, "innerRadius": "92%", "startValue": 90 },
+				         		  { "color": "#cc4748", "endValue": 220, "innerRadius": "90%", "startValue": 130 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.proposedMonthlyPowerCost,
+				        "bottomText": "$" + $scope.activeProject.calculationsData.proposedMonthlyPowerCost,
 				        "bottomTextYOffset": 8,
-				        "endValue": powerCostInterval*6
+				        "endValue": 220
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-				proposedPowerCostChart.arrows[0].setValue(
-					Number(calculationsData.proposedYearByYearPowerCost[0])/12
-				);
 
-				var maintenanceCostInterval = (Number(calculationsData.existingYearlyMaintenanceCost)/12) > Number(calculationsData.monthlyLeasePaymentStandard) ?
-				((Number(calculationsData.existingYearlyMaintenanceCost)/12)/5).toFixed(0): (calculationsData.monthlyLeasePaymentStandard/5).toFixed(0);
 				var existingMaintenanceCostChart = AmCharts.makeChart("existingMaintenanceCost", {
 				    "type": "gauge",   
 				    "axes": [{
 				        "axisThickness":1,
 				        "axisAlpha":1,
 				        "tickAlpha":0,
-				        "valueInterval":maintenanceCostInterval,
-				        "bands": [{  "color": "#84b761",  "endValue": maintenanceCostInterval*2, "innerRadius": "93%", "startValue": 0 },
-				         		  { "color": "#fdd400", "endValue":  maintenanceCostInterval*4, "innerRadius": "92%", "startValue":  maintenanceCostInterval*2 },
-				         		  { "color": "#cc4748", "endValue":  maintenanceCostInterval*6, "innerRadius": "90%", "startValue":  maintenanceCostInterval*4 }
+				        "valueInterval":40,
+				        "bands": [{  "color": "#84b761",  "endValue": 90, "innerRadius": "93%", "startValue": 0 },
+				         		  { "color": "#fdd400", "endValue": 130, "innerRadius": "92%", "startValue": 90 },
+				         		  { "color": "#cc4748", "endValue": 220, "innerRadius": "90%", "startValue": 130 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.existingMonthlyMaintenanceCost,
+				        "bottomText": "$" + $scope.activeProject.calculationsData.existingMonthlyMaintenanceCost,
 				        "bottomTextYOffset": 8,
-				        "endValue": maintenanceCostInterval*6
+				        "endValue": 220
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-				existingMaintenanceCostChart.arrows[0].setValue(Number(calculationsData.existingYearlyMaintenanceCost)/12);
 
 				var proposedMaintenanceCostChart = AmCharts.makeChart("proposedMaintenanceCost", {
 				    "type": "gauge",   
@@ -178,19 +183,26 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 				        "axisThickness":1,
 				        "axisAlpha":1,
 				        "tickAlpha":0,
-				        "valueInterval":maintenanceCostInterval,
-				        "bands": [{  "color": "#84b761",  "endValue": maintenanceCostInterval*2, "innerRadius": "93%", "startValue": 0 },
-				         		  { "color": "#fdd400", "endValue":  maintenanceCostInterval*4, "innerRadius": "92%", "startValue":  maintenanceCostInterval*2 },
-				         		  { "color": "#cc4748", "endValue":  maintenanceCostInterval*6, "innerRadius": "90%", "startValue":  maintenanceCostInterval*4 }
+				        "valueInterval":40,
+				        "bands": [{  "color": "#84b761",  "endValue": 90, "innerRadius": "93%", "startValue": 0 },
+				         		  { "color": "#fdd400", "endValue": 130, "innerRadius": "92%", "startValue": 90 },
+				         		  { "color": "#cc4748", "endValue": 220, "innerRadius": "90%", "startValue": 130 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.monthlyLeasePaymentStandard,
+				        "bottomText":"$" + $scope.activeProject.calculationsData.monthlyLeasePaymentStandard,
 				        "bottomTextYOffset": 8,
-				        "endValue": maintenanceCostInterval*6
+				        "endValue": 220
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-          		proposedMaintenanceCostChart.arrows[0].setValue( calculationsData.monthlyLeasePaymentStandard);
+
+				// Set arrows for now
+				existingPowerUsageChart.arrows[0].setValue(160);
+          		proposedPowerUsageChart.arrows[0].setValue(40);
+          		existingPowerCostChart.arrows[0].setValue(200);
+          		proposedPowerCostChart.arrows[0].setValue(60);
+          		existingMaintenanceCostChart.arrows[0].setValue(95);
+          		proposedMaintenanceCostChart.arrows[0].setValue(0);
 
 				$("#proposedPowerUsage a").remove();
 				$("#existingPowerUsage a").remove();
@@ -208,47 +220,43 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 	$('#expeditedShippingBt').click(function(){ 
 		// Update data to expedited shipping
 		if($scope.activeView != 'expeditedShipping'){
+			$scope.activeProject.stats = calculateChartPoints();
 			$scope.activeView = 'expeditedShipping';
-			$('#expeditedShippingBt').toggleClass('radio-btn-selected');
-			$('#standardShippingBt').toggleClass('radio-btn-selected');
-			commonFactory.updateScope($scope);
-			$scope.activeProject.stats = commonFactory.calculateChartPoints(calculationsData);
 			$scope.areaChart.setData($scope.activeProject.stats);
 		}
 	});
 	$('#standardShippingBt').click(function(){ 
 		// Update data to standard shipping
 		if($scope.activeView != 'standardShipping'){
+			$scope.activeProject.stats = calculateChartPoints();
 			$scope.activeView = 'standardShipping';
-			$('#expeditedShippingBt').toggleClass('radio-btn-selected');
-			$('#standardShippingBt').toggleClass('radio-btn-selected');
-			commonFactory.updateScope($scope);
-			$scope.activeProject.stats = commonFactory.calculateChartPoints(calculationsData);
 			$scope.areaChart.setData($scope.activeProject.stats);
 		}
 	});
-	$('#upFrontPurchaseBt').click(function(){ 
+	$('#upfrontPurchaseBt').click(function(){ 
 		// Update data to expedited shipping
-		if($scope.paymentType != 'upFrontPurchase'){
-			$scope.paymentType = 'upFrontPurchase';
-			$('#upFrontPurchaseBt').toggleClass('radio-btn-selected');
-			$('#leaseToOwnBt').toggleClass('radio-btn-selected');
-			commonFactory.updateScope($scope);
-			$scope.activeProject.stats = commonFactory.calculateChartPoints(calculationsData);
+		if($scope.PaymentType != 'upfrontPurchase'){
+			$scope.activeProject.stats = calculateChartPoints();
+			$scope.PaymentType = 'upfrontPurchase';
 			$scope.areaChart.setData($scope.activeProject.stats);
 		}
 	});
 	$('#leaseToOwnBt').click(function(){ 
 		// Update data to standard shipping
-		if($scope.paymentType != 'leaseToOwn'){
-			$scope.paymentType = 'leaseToOwn';
-			$('#upFrontPurchaseBt').toggleClass('radio-btn-selected');
-			$('#leaseToOwnBt').toggleClass('radio-btn-selected');
-			commonFactory.updateScope($scope);
-			$scope.activeProject.stats = commonFactory.calculateChartPoints(calculationsData);
+		if($scope.activeView != 'leaseToOwn'){
+			$scope.activeProject.stats = calculateChartPoints();
+			$scope.PaymentType = 'leaseToOwn';
 			$scope.areaChart.setData($scope.activeProject.stats);
 		}
 	});
+
+    // Expand or collapse headers
+    $('.page-header').click(function(){
+        $(this).next().slideToggle('slow');
+        var icon = $(this).find('i');
+        $(icon).toggleClass("fa-minus-square-o");
+        $(icon).toggleClass("fa-plus-square-o");
+    });
 
 	// Get Project by ID
 	$scope.getProject = function(id){
@@ -285,38 +293,77 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 
 		// Update projects stats
 		projectsFactory.getProjectStats(project.project_ID, function(data){
-			// Clone original data to avoid changes to the original source
-			calculationsData = $.extend(true, {}, data);
-			
+			calculationsData = data;
 			$scope.activeProject.calculationsData = data;
-			commonFactory.updateScope($scope);
-			$scope.activeProject.stats = commonFactory.calculateChartPoints(calculationsData);
+			$scope.activeProject.stats = calculateChartPoints();
 			// TODO:Check with Arkon this field
 			$scope.activeProject.totalSavings = calculateTotalSavings(data);
-
 			// Assign value for UI use
-			$scope.activeProject.calculationsData.existingMonthlyPowerCost = commonFactory.toFormattedNumber(Number(data.existingYearByYearPowerCost[0])/12); 
-			$scope.activeProject.calculationsData.proposedMonthlyPowerCost = commonFactory.toFormattedNumber(Number(data.proposedYearByYearPowerCost[0])/12); 
-        	$scope.activeProject.calculationsData.existingMonthlyPowerUsage = commonFactory.toFormattedNumber(((Number(data.existingYearByYearPowerCost[0])/12).toFixed(2)/Number($scope.activeProject.power_cost_per_kWh)));
-        	$scope.activeProject.calculationsData.proposedMonthlyPowerUsage = commonFactory.toFormattedNumber(($scope.activeProject.calculationsData.proposedMonthlyPowerCost/Number($scope.activeProject.power_cost_per_kWh)));
-        	$scope.activeProject.calculationsData.powerSavings = commonFactory.toFormattedNumber(Number(data.existingYearByYearPowerCost[0]) - Number(data.proposedYearByYearPowerCost[0]));
-        	$scope.activeProject.calculationsData.immediateMonthlySavingsExpedited = commonFactory.toFormattedNumber(
-        		Number(data.existingYearlyMaintenanceCost)/12 + 
-        		Number(data.existingYearByYearPowerCost[0])/12 - 
-        		Number(data.monthlyLeasePaymentExpedited)
-        	);
-        	$scope.activeProject.calculationsData.immediateMonthlySavingsStandard = commonFactory.toFormattedNumber(
-        		Number(data.existingYearlyMaintenanceCost)/12 + 
-        		Number(data.existingYearByYearPowerCost[0])/12 - 
-        		Number(data.monthlyLeasePaymentStandard)
-        	);
-        	$scope.activeProject.calculationsData.monthlyLeasePaymentStandard = commonFactory.toFormattedNumber(data.monthlyLeasePaymentStandard);
-			$scope.activeProject.calculationsData.monthlyLeasePaymentExpedited = commonFactory.toFormattedNumber(data.monthlyLeasePaymentExpedited);
-			$scope.activeProject.calculationsData.existingMonthlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost)/12);
-			$scope.activeProject.calculationsData.existingYearlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost));
+			$scope.activeProject.calculationsData.existingMonthlyMaintenanceCost = (Number(data.existingYearlyMaintenanceCost)/12).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+			$scope.activeProject.calculationsData.existingMonthlyPowerCost = (Number(data.existingYearByYearPowerCost[0])/12).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+			$scope.activeProject.calculationsData.proposedMonthlyPowerCost = (Number(data.proposedYearByYearPowerCost[0])/12).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+        	$scope.activeProject.calculationsData.existingMonthlyPowerUsage = ($scope.activeProject.calculationsData.existingMonthlyPowerCost/Number($scope.activeProject.power_cost_per_kWh)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        	$scope.activeProject.calculationsData.proposedMonthlyPowerUsage = ($scope.activeProject.calculationsData.proposedMonthlyPowerCost/Number($scope.activeProject.power_cost_per_kWh)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        	$scope.activeProject.calculationsData.powerSavings = Number(data.existingYearByYearPowerCost[0]) - Number(data.proposedYearByYearPowerCost[0]);
+        
 		});
 
 		$('#poBnt').trigger('click');
+	};
+
+	calculateChartPoints = function(){
+		var stats = new Array();
+		if($scope.activeView == 'expeditedShipping' && $scope.paymentType == 'upfrontPurchase'){
+			for (var i = 0; i < 10; i++) {
+				stats[i] = {
+					year: (new Date().getFullYear() + i + 1).toString(),
+					existingPowerCost: calculationsData.existingYearByYearPowerCost[i],
+					existingMantenanceCost: calculationsData.existingYearByYearPowerCost[i] + (calculationsData.existingYearlyMaintenanceCost/100),
+					proposedPowerCost: calculationsData.proposedYearByYearPowerCost[i],
+					LEDLeasePayment: calculationsData.proposedYearByYearPowerCost[i],
+					savings: calculationsData.yearByYearSavings[i],
+				};
+			};
+		}
+		else if($scope.activeView == 'standardShipping' && $scope.paymentType == 'upfrontPurchase'){
+			for (var i = 0; i < 10; i++) {
+				stats[i] = {
+					year: (new Date().getFullYear() + i + 1).toString(),
+					existingPowerCost: calculationsData.existingYearByYearPowerCost[i] ,
+					existingMantenanceCost: calculationsData.existingYearByYearPowerCost[i] + (calculationsData.existingYearlyMaintenanceCost/100),
+					proposedPowerCost: calculationsData.proposedYearByYearPowerCost[i],
+					LEDLeasePayment: calculationsData.proposedYearByYearPowerCost[i],
+					savings: calculationsData.yearByYearSavings[i],	
+				};
+			};
+		}
+		else if($scope.activeView == 'expeditedShipping' && $scope.paymentType == 'leaseToOwn'){
+			for (var i = 0; i < 10; i++) {
+				stats[i] = {
+					year: (new Date().getFullYear() + i + 1).toString(),
+					existingPowerCost: calculationsData.existingYearByYearPowerCost[i],
+					existingMantenanceCost: calculationsData.existingYearByYearPowerCost[i] + (calculationsData.existingYearlyMaintenanceCost/100),
+					proposedPowerCost: calculationsData.proposedYearByYearPowerCost[i],
+					LEDLeasePayment: i < 6 ? calculationsData.proposedYearByYearPowerCost[i] + (calculationsData.yearlyLeasePaymentExpedited/100): calculationsData.proposedYearByYearPowerCost[i],
+					savings: calculationsData.yearByYearSavings[i],
+				};
+			};
+		}
+		else if($scope.activeView == 'standardShipping' && $scope.paymentType == 'leaseToOwn'){
+			for (var i = 0; i < 10; i++) {
+				stats[i] = {
+					year: (new Date().getFullYear() + i + 1).toString(),
+					existingPowerCost: calculationsData.existingYearByYearPowerCost[i] ,
+					existingMantenanceCost: calculationsData.existingYearByYearPowerCost[i] + (calculationsData.existingYearlyMaintenanceCost/100),
+					proposedPowerCost: calculationsData.proposedYearByYearPowerCost[i],
+					LEDLeasePayment: i < 6 ?calculationsData.proposedYearByYearPowerCost[i] + (calculationsData.yearlyLeasePaymentStandard/100): calculationsData.proposedYearByYearPowerCost[i],
+					savings: calculationsData.yearByYearSavings[i],	
+				};
+			};
+		}
+		
+
+		return stats;
 	};
 
 	$scope.activateMarker = function (poleID){
@@ -327,6 +374,23 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 			}
 		};
 	}
+
+	$scope.initTable = function(){
+		$('#projectsTable').dataTable({
+			"drawCallback": function( settings ) {
+			    var api = this.api();
+			    var projectIds = new Array();
+			    // Rows on the screen 
+			    var tableData = api.rows( {page:'current'} ).data();
+			    // Get Project Ids
+			    for (var i = 0; i < tableData.length; i++) {
+			        projectIds[i] = tableData[i][0];
+			    };
+			    // Draw filtered projects in the map
+			    $scope.drawMap(projectIds, 'projects');
+			}
+		});
+	};
 
 	/******************************************
 		Maps config and functions
@@ -341,10 +405,42 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 	var activeIds = {};
 	var lastInfoWindow = null;
 
+
     // Update map with new pins 
 	$scope.drawMap = function( list, type) {
 		deleteAllMarkers();
-		if (type == 'poles'){
+		if (type == 'projects' ){
+			activeIds = new Array();
+			for (var i = 0; i < list.length; i++) {
+				activeIds[i] = Number(list[i].substring(list[i].indexOf(">") + 1,list[i].lastIndexOf("<")));
+			};
+			var projects = $scope.projects;
+			LatLngList = new Array();
+			indexes = new Array();
+
+			for (var j = 0; j < activeIds.length; j++) {
+				for (var i = 0; i < projects.length; i++) {
+					if(projects[i].project_ID == activeIds[j]) {
+						indexes[j] = i;
+						LatLngList.push(new google.maps.LatLng(projects[i].project_latitude, projects[i].project_longitude));
+					}
+				}
+			}
+			iterator = 0;
+			//  Create a new viewpoint bound
+			var bounds = new  google.maps.LatLngBounds();
+			// Increase the bounds to take every point 
+			for (var i = 0; i < LatLngList.length; i++) {
+			  	setTimeout(function() {
+			      	addMarker(projects, "projects");
+			    }, i * 150);
+			  	bounds.extend (LatLngList[i]);
+			}
+			//  Fit bounds into the map
+			$scope.map.fitBounds (bounds);
+			$("#map-canvas").css("position","fixed");
+		}
+		else if (type == 'poles'){
 			LatLngList = new Array();
 
 			for (var j = 0; j < list.length; j++) {
@@ -362,7 +458,6 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 			}
 			//  Fit bounds into the map
 			$scope.map.fitBounds (bounds);
-			$("#map-canvas").css("position","fixed");
 		}
 	};
 

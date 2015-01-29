@@ -1,0 +1,33 @@
+<div>
+
+<div class="container" style="padding-top: 60px;">
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4" style="border-radius: 25px;">
+			<div class="login-panel panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Please Sign In</h3>
+				</div>
+				<div class="panel-body" style="margin:10px; ">
+					<div class="row">
+						<img class="img-responsive" id="logo" alt="ArkonLED" src="webapp/images/ArkonLED_Logo_HighRes.jpg" width="320px">
+					</div>
+					<div class="row">
+						<form ng-submit="login()" style="margin:20px 5px 0 5px">
+							<fieldset>
+								<div class="form-group">
+									<input class="form-control" ng-model="credentials.email" placeholder="E-mail" name="email" type="email" autofocus required />
+								</div>
+								<div class="form-group">
+									<input class="form-control" ng-model="credentials.password" placeholder="Password" name="password" type="password" required />
+								</div>
+								<button id="submit" type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
