@@ -6,7 +6,8 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 	$scope.projects = [];
 	$scope.activeProject = null;
 	$scope.areaChartCreated = false;
-
+	$scope.baseUrl = commonFactory.baseUrl;
+	
 	$scope.toFormattedNumber = commonFactory.toFormattedNumber;
 
 	projectsFactory.getProjects(function(data){
@@ -183,14 +184,14 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 				         		  { "color": "#fdd400", "endValue":  maintenanceCostInterval*4, "innerRadius": "92%", "startValue":  maintenanceCostInterval*2 },
 				         		  { "color": "#cc4748", "endValue":  maintenanceCostInterval*6, "innerRadius": "90%", "startValue":  maintenanceCostInterval*4 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.monthlyLeasePaymentStandard,
+				        "bottomText": 0.00,
 				        "bottomTextYOffset": 8,
 				        "endValue": maintenanceCostInterval*6
 				    }],
     				"fontSize": 8,
 				    "arrows": [{}]
 				});
-          		proposedMaintenanceCostChart.arrows[0].setValue( calculationsData.monthlyLeasePaymentStandard);
+          		proposedMaintenanceCostChart.arrows[0].setValue(0);
 
 				$("#proposedPowerUsage a").remove();
 				$("#existingPowerUsage a").remove();
@@ -319,6 +320,20 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 		$('#poBnt').trigger('click');
 	};
 
+	$scope.evenTableHeights = function(){
+		var height2 =  (_.size($scope.activeProject.lightFixtureTablePoles)+1)*37 + 60;
+		var height1 =  _.size($scope.activeProject.existingLightFixtureTablePoles)*37 + 60;
+		if (height1 > height2) {
+			$("#proposedLightFixtureTable").height(height1);
+			$("#existingLightFixtureTable").height(height1);
+		}else if (height2 > height1) {
+			$("#proposedLightFixtureTable").height(height2);
+			$("#existingLightFixtureTable").height(height2);
+		};
+       
+        $('#progressModal').modal("hide");  
+	}
+
 	$scope.activateMarker = function (poleID){
 		for (var i = 0; i < markers.length; i++) {
 			if(markers[i].key == poleID){
@@ -412,11 +427,21 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 		var data = $scope.activeProject.poles;
 		var totalLightFixtureQuantity = 0;
 		var totalLightFixtureUnitCost = 0.0;
+
+		// existing fields
+		var numExistingFeature = 0, existingFeatureDesc ='';
+
+		// Prepare data for Project Overview  Existing Light fixtures table
+		var existingGroupedPoles = new Array(); 
+
 		// Prepare data for Project Overview Light fixtures table
 		var groupedPoles = new Array(); 
+
         for (i = 0; i < data.length; i++) { 
+        	/********* Proposed Stats ************/
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
         	totalLightFixtureUnitCost += Number(data[i].LEDunitCost);
+
             // Extract elements with the same LEDpartNumber 
             var group = _.where(data, {LEDpartNumber: data[i].LEDpartNumber});
             // Check if group was not added already to groupedPoles list
@@ -442,9 +467,41 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
                     groupedPoles.push(auxPole);
                 }
             }
+
+            /*************** Existing Stats ***********************/
+			// Extract existing poles with same bulbID
+            var existingGroup = _.where(data, {bulbID: data[i].bulbID});
+
+            // Check if existingGroup was not added already to groupedPoles list
+            var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID});
+            if(previouslyAddedExistingPole.length == 0){// If item not repeated, add to existing list
+                if (existingGroup.length == 1) {
+                    existingGroupedPoles.push(
+                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID')
+                    );
+                }                
+                // if item repeated, calculate the total numOfHeads save it
+                else if (existingGroup.length > 1) {
+                    var totalNumOfHeads = 0;
+                    for (var j = 0; j < existingGroup.length; j++) {
+                        totalNumOfHeads += Number(existingGroup[j].numOfHeadsProposed);
+                    };
+                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID');
+                    aux['numOfHeads'] = totalNumOfHeads;
+                    existingGroupedPoles.push(aux);
+                }
+            }
         };
+
+
+        $scope.activeProject.existingLightFixtureTablePoles = existingGroupedPoles;
         $scope.activeProject.lightFixtureTotalUnitCost = totalLightFixtureUnitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         $scope.activeProject.lightFixtureTotalQuantity = totalLightFixtureQuantity;
+
+        // TODO Calculate existing fixtures fields and add them to scope
+        // <td>{{ pole.numExistingFeature }}</td>
+        // <td>{{ pole.existingFeatureDesc }}</td>
+
 		return groupedPoles;
 	};
 

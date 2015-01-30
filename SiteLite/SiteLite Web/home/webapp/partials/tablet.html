@@ -28,6 +28,7 @@
         <div id="poPanel" class="panel panel-default" style="margin-top: 10px;">
           <div class="panel-heading"> <i class="fa fa-bars fa-fw"></i> Project Overview </div>
           <div class="panel-body">
+            
             <!-- Project Details -->
             <div>
               <div class="panel panel-primary">
@@ -64,29 +65,59 @@
                 
               </div>
             </div>
-            <!-- Light Fixtures Table -->
-            <div class="panel panel-default col-sm-12" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
-              <div class="panel-heading"> Light Fixtures: </div>
-              <div class="panel-body">
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <thead> <tr><th>Part No.</th><th>Description</th><th>Quantity</th></tr> </thead>
-                    <tbody>
-                      <tr ng-repeat="pole in activeProject.lightFixtureTablePoles">  
-                        <td>{{ pole.LEDpartNumber }}</td>
-                        <td>{{ pole.LEDdesc }}</td>
-                        <td>{{ pole.numOfHeadsProposed}}</td>
-                      </tr>
-                      <tr class="alert alert-success" >
-                        <td></td>
-                        <td><b>Totals</b></td>
-                        <td>{{ activeProject.lightFixtureTotalQuantity }} </td>
-                      </tr>
-                    </tbody>
-                  </table>
+            
+            <!-- Light Fixtures Tables -->
+            <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;">
+              
+              <!-- Existing Light Fixtures Table -->
+              <div class="col-sm-4" style="padding-left: 0px; padding-right: 0px;">
+                <div class="panel panel-default" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
+                  <div class="panel-heading"> Existing Light Fixtures:</div>
+                  <div class="panel-body">
+                    <div class="table-responsive" id="existingLightFixtureTable">
+                      <table class="table table-hover" >
+                        <thead> <tr><th>No. of Fixtures </th><th>Description</th></tr> </thead>
+                        <tbody>
+                          <tr ng-repeat="pole in activeProject.existingLightFixtureTablePoles" on-finish-render="evenTableHeights()">  
+                            <td>{{ pole.numOfHeads }}</td>
+                            <td>{{ pole.bulbDesc }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Proposed Light Fixtures Table -->
+              <div class="col-sm-8" style="padding-right: 0px;">
+                <div class="panel panel-default" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
+                  <div class="panel-heading"> Proposed Light Fixtures:</div>
+                  <div class="panel-body">
+                    <div class="table-responsive" id="proposedLightFixtureTable" >
+                      <table class="table table-hover" >
+                        <thead> <tr><th>Part No.</th><th>Description</th><th>Unit Cost</th><th>Quantity</th></tr> </thead>
+                        <tbody>
+                          <tr ng-repeat="pole in activeProject.lightFixtureTablePoles" on-finish-render="evenTableHeights()">  
+                            <td>{{ pole.LEDpartNumber }}</td>
+                            <td>{{ pole.LEDdesc }}</td>
+                            <td>${{ pole.LEDunitCost }}</td>
+                            <td>{{ pole.numOfHeadsProposed}}</td>
+                          </tr>
+                          <tr class="alert alert-success" >
+                            <td></td>
+                            <td><b>Totals</b></td>
+                            <td>${{ activeProject.lightFixtureTotalUnitCost }}</td>
+                            <td>{{ activeProject.lightFixtureTotalQuantity }} </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            
             <!-- Brakets/Others Table -->  
             <div class="panel panel-default col-sm-12" style="padding-left: 0px; padding-right: 0px; margin-right: 0px;">
               <div class="panel-heading"> Brackets/Others: </div>
@@ -155,32 +186,6 @@
                 </div>
               </div> 
             </div>
-            <!-- Maintenance Cost -->
-            <div class="col-md-6">
-              <div id="maintenanceCostPanel" class="panel panel-default">
-                <div class="panel-heading"><i class="fa fa-money"></i> Average Monthly Maintenance Cost</div>
-                <div class="panel-body">
-                  <div class="col-sm-12 gadget-list-item">
-                    <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
-                    </div>
-                    <div class="col-sm-6">
-                      <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
-                    </div>
-                  </div>
-                  <div class="col-sm-12 gadget-list-item">
-                    <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Lease Cost:</em></span> </br>
-                     ${{ activeProject.calculationsData.monthlyLeasePaymentStandard}}
-                    </div>
-                    <div class="col-sm-6">
-                      <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </div> 
-            </div>
             <!-- What is my Cost -->
             <div class="col-md-6">
               <div id="powerUsagePanel" class="panel panel-default">
@@ -216,7 +221,7 @@
                     <div class="col-sm-8 footprint-row">
                       <h3 class="text-danger">Existing Footprint</h3>
                       <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
-                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>Kg</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
                     </div>
                     <div class="col-sm-4" style="padding: 25px;">
                       <img width="80%" style="max-width: 80px; min-width: 50px;" src="webapp/images/coal.png">
@@ -235,6 +240,33 @@
                 </div>
               </div>
             </div> 
+            <!-- Maintenance Cost -->
+            <div class="col-md-6">
+              <div id="maintenanceCostPanel" class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-money"></i> Average Monthly Maintenance Cost</div>
+                <div class="panel-body">
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 gadget-list-item">
+                    <div class="col-sm-6">
+                      </br><span class="text-muted small text-success"><em>LED Maintenance Cost:</em></span> </br>
+                     $0.00
+                    </div>
+                    <div class="col-sm-6">
+                      <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            
 
             <!-- Options Row -->
             <div class="col-md-12" style="padding:20px 60px 30px 60px">

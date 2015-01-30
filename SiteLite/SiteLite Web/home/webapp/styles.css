@@ -5,14 +5,16 @@ html,body{
 
 body{
   	padding-top:50px; /*padding for navbar*/
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 #main, #main>.row {
 	height:100%;
 }
 
-#main>.row {
-    overflow-y:scroll;
+#main {
+    padding-right: 0;
 }
 
 #left {
@@ -29,7 +31,7 @@ body{
 	width:33.3333%;
     height:calc(100% - 0);
     position:absolute;
-    right:16px;
+    right:0;
     top:50px;
     bottom:0;
     overflow:hidden;

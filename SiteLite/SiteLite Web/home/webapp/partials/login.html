@@ -1,6 +1,8 @@
 <div>
 
 <div class="container" style="padding-top: 60px;">
+	
+	<!-- Login Box -->
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4" style="border-radius: 25px;">
 			<div class="login-panel panel panel-default">
@@ -11,11 +13,17 @@
 					<div class="row">
 						<img class="img-responsive" id="logo" alt="ArkonLED" src="webapp/images/ArkonLED_Logo_HighRes.jpg" width="320px">
 					</div>
+					<div id="alert-container" class="row" >
+						<div class="alert alert-warning" style="margin: 5px 5px -5px;">
+							<button ng-click="closeAlert()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<strong>Access Forbidden!</strong> There was an error with your E-Mail/Password combination. Please try again.
+						</div>
+					</div>
 					<div class="row">
 						<form ng-submit="login()" style="margin:20px 5px 0 5px">
 							<fieldset>
 								<div class="form-group">
-									<input class="form-control" ng-model="credentials.email" placeholder="E-mail" name="email" type="email" autofocus required />
+									<input class="form-control" ng-model="credentials.email" placeholder="E-Mail" name="email" type="email" autofocus required />
 								</div>
 								<div class="form-group">
 									<input class="form-control" ng-model="credentials.password" placeholder="Password" name="password" type="password" required />
@@ -28,6 +36,21 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Progressbar Modal -->
+	<div  id="progressModal" class="modal fade">
+	  <div class="modal-dialog">
+	    <div class="modal-content" style="min-height: 200px; margin-top: 200px; padding: 40px 30px 10px;">
+		  <h3 style="margin-bottom: 40px;">&nbsp; Loading session...</h3>
+		  <div class="progress">
+		    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+		      <span class="sr-only">100% Complete</span>
+		    </div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
 </div>
 
 </div>

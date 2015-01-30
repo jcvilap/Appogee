@@ -1,39 +1,4 @@
 window.arkonLEDApp = angular.module('arkonLEDApp',['ngRoute', 'ui.bootstrap']).
-factory('projectsFactory', function ($http){
-	var factory = {};
-    var url = "http://ec2-54-165-80-46.compute-1.amazonaws.com/iOS/";
-
-    // Get list of projects from web services
-    factory.getProjects = function(callback){
-        $http.get(url + "Projects/getProjectNames.php?userID=27").
-        success(function(data) {
-            callback( data.message );
-        });
-    };
-    // Get Project by ID
-    factory.getProject = function(id){
-        for (var i = $scope.projects.length - 1; i >= 0; i--) {
-            if($scope.projects[i].project_ID == id) 
-                return $scope.projects[i]; 
-        };
-    };
-
-    factory.getProjectPoles = function(id, callback){
-        $http.get(url + "LightPoles/getPoles.php?projectID=" + id).
-        success(function(data) {
-            callback( data.message );
-        });
-    };
-
-    factory.getProjectStats = function(id, callback){
-        $http.get(url + "Projects/calculateCost.php?projectID=" + id).
-        success(function(data) {
-            callback(data);
-        });
-    };
-
-	return factory;
-}).
 directive('onFinishRender', function($timeout){
     return{
         restrict: 'A',
@@ -44,8 +9,17 @@ directive('onFinishRender', function($timeout){
         }
     }
 }).
-controller('myController', function($scope, $routeParams) {
-     $scope.params = $routeParams;
+run(function($rootScope, $location, loginFactory){
+    var routesThatRequireAuth = ['', '/', '/home'];
+    $rootScope.$on('$routeChangeStart', function(event, next, current){
+        var path = $location.path();
+        if(_.contains(routesThatRequireAuth, path) && !loginFactory.isLoggedIn()){
+            $location.path('/login/');
+        }
+        else if(path.indexOf("login") > -1 && loginFactory.isLoggedIn()){
+            $location.path('/');
+        }
+    });
 }).
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -61,9 +35,9 @@ config(['$routeProvider', function($routeProvider) {
         templateUrl: 'webapp/partials/tablet.html',
         controller: 'TabletController'
     }).
-    when('/login', {
+    when('/login/:message', {
         templateUrl: 'webapp/partials/login.html',
-        controller: 'myController'
+        controller: 'LoginController'
     }).
     otherwise({
         redirectTo: '/'

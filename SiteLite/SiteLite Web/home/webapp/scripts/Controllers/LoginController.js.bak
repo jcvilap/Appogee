@@ -3,20 +3,24 @@ controller('LoginController', function($scope, $routeParams, $location, loginFac
     $scope.params = $routeParams;
     $scope.credentials = {mail: '', password: ''};
 
+    if($scope.params.message !== '403'){
+         $("#alert-container").hide();
+    }
+
     $scope.login = function() {
+        $('#progressModal').modal("show");
         loginFactory.login($scope.credentials).success( function(resp){
             // Login success
-            if(resp.success == 1){
+            if(resp.success === 1){
                 $location.path('/'); 
                 loginFactory.cacheSession();
             }
             // Login Failure
-            else {
-                // Todo: Display success.message when web service is ready to handle the requests
-                // For Now: authenticate any user name and pass
-                $location.path('/');
-                loginFactory.cacheSession();   
+            else if(resp.success === 0){
+                $location.path('/login/403');
+                $("#alert-container").show();
             }
+            $('#progressModal').modal("hide");
         });
     };
 });

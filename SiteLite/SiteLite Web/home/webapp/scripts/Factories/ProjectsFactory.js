@@ -2,13 +2,13 @@
 	This factory is used to get the projects info from the server via RESTful calls 
 */
 arkonLEDApp.
-factory('projectsFactory', function ($http){
+factory('projectsFactory', function ($http, commonFactory){
 	var factory = {};
-    var url = "http://ec2-54-165-80-46.compute-1.amazonaws.com/iOS/";
+    var baseUrl = commonFactory.baseUrl;
 
     // Get list of projects from web services
     factory.getProjects = function(callback){
-        $http.get(url + "Projects/getProjectNames.php?userID=27").
+        $http.get(baseUrl + "/iOS/Projects/getProjectNames.php?userID=27").
         success(function(data) {
             callback( data.message );
         });
@@ -22,14 +22,14 @@ factory('projectsFactory', function ($http){
     };
 
     factory.getProjectPoles = function(id, callback){
-        $http.get(url + "LightPoles/getPoles.php?projectID=" + id).
+        $http.get(baseUrl + "/iOS/LightPoles/getPoles.php?projectID=" + id).
         success(function(data) {
             callback( data.message );
         });
     };
 
     factory.getProjectStats = function(id, callback){
-        $http.get(url + "Projects/calculateCost.php?projectID=" + id).
+        $http.get(baseUrl + "/iOS/Projects/calculateCost.php?projectID=" + id).
         success(function(data) {
             callback(data);
         });

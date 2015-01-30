@@ -6,7 +6,11 @@ factory('commonFactory', function ($http){
 	var factory = {};
 	var $scope; 
 
-	// Update scope from outside companent
+	//factory.baseUrl = "http://ec2-54-165-80-46.compute-1.amazonaws.com";
+	factory.baseUrl = "..";
+
+
+	// Update scope from outside component
 	factory.updateScope = function(scope){
 		$scope = scope;
 	};

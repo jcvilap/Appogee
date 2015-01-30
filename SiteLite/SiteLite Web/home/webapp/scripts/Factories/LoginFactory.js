@@ -2,7 +2,7 @@
   This factory takes care of login/out and session management
 */
 arkonLEDApp.
-// Factory created for session management, only used here so far
+// Factory created for session management
 factory('sessionService', function(){
 	return{
 		get: function(key){
@@ -16,26 +16,39 @@ factory('sessionService', function(){
 		},
 	};
 }). 
-factory('loginFactory', function($http, $location, sessionService) {
+factory('loginFactory', function($http, $location, sessionService, commonFactory) {
     var factory = {};
     var userCredentials = {email: '', password: ''};
+    var baseUrl = commonFactory.baseUrl;
 
-    factory.cacheSession = function() {
-    	sessionService.set('authenticated', true);
+    factory.cacheSession = function(userInfo) {
+        sessionService.set('userID', userInfo.userID);
+        sessionService.set('firstName', userInfo.firstName);
+        sessionService.set('lastName', userInfo.lastName);
+        sessionService.set('userType', userInfo.userType);
+        sessionService.set('authenticated', true);
     };
 
     var uncacheSession = function() {
-    	sessionService.unset('authenticated');
+    	sessionService.unset('userID');
+        sessionService.unset('firstName');
+        sessionService.unset('lastName');
+        sessionService.unset('userType');
+        sessionService.unset('authenticated');
     };
 
     factory.login = function(credentials){
     	credentials.password = SHA1(credentials.password);
-    	return $http.post("http://ec2-54-165-80-46.compute-1.amazonaws.com/iOS/AccountInfo/login.php", credentials);
+    	return $http({
+            url: baseUrl + "/iOS/AccountInfo/login.php", 
+            method: "GET",
+            params: credentials
+        });
     };
 
     factory.logout = function(){
     	uncacheSession();
-    	$location.path('/login');
+    	$location.path('/login/');
     };
 
     factory.setCredentials = function(credentials){
@@ -43,7 +56,7 @@ factory('loginFactory', function($http, $location, sessionService) {
     };
 
     factory.isLoggedIn = function(){
-        return sessionService.get('authenticated');
+        return sessionService.get('authenticated') == "true";
     };
 
     return factory;
