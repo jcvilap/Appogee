@@ -6,12 +6,12 @@
     
     require("../../../inc/connectionString.php");
 
-    $strSQL = "SELECT unique_user_id, password, type, user_status FROM Users WHERE email = ?";
-    $strSQLParams = $_POST['email'];
+    $strSQL = "SELECT unique_user_id, password, type, user_status, first_name, last_name FROM Users WHERE email = ?";
+    $strSQLParams = $_REQUEST['email'];
     if($stmt = $mysqli->prepare($strSQL))
     {
         //bind parameters
-        $stmt->bind_param("s", $_POST['email']);
+        $stmt->bind_param("s", $_REQUEST['email']);
         //execute query
         if(!$stmt->execute())
         {
@@ -26,7 +26,7 @@
         }
         
         /* bind result variables */
-        $stmt->bind_result($userIDBind, $passwordBind, $typeBind, $statusIDBind);
+        $stmt->bind_result($userIDBind, $passwordBind, $typeBind, $statusIDBind, $firstNameBind, $lastNameBind);
         
         //Enables 'num_rows'
         $stmt->store_result();
@@ -44,14 +44,17 @@
                 //Active Account. Check Password
                 else if($statusIDBind == 2)
                 {
-                    if($_POST['password'] == $passwordBind)
+                    if($_REQUEST['password'] == $passwordBind)
                     {
                         //Set Session Variables
                         $_SESSION["userID"] = $userIDBind;
                         $_SESSION["userType"] = $typeBind;
+                        
                         $response["success"] = 1;
                         $response["userID"] = $userIDBind;
                         $response["userType"] = $typeBind;
+                        $response["firstName"] = $firstNameBind;
+                        $response["lastName"] = $lastNameBind;
                         die(json_encode($response));
                     }
                     //Incorrect Password
