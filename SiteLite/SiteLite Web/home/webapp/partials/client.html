@@ -78,11 +78,11 @@
                   <div class="panel-body">
                     <div class="table-responsive" id="existingLightFixtureTable">
                       <table class="table table-hover" >
-                        <thead> <tr><th>No. of Fixtures </th><th>Description</th></tr> </thead>
+                        <thead> <tr><th>Description </th><th>Quantity</th></tr> </thead>
                         <tbody>
                           <tr ng-repeat="pole in activeProject.existingLightFixtureTablePoles" on-finish-render="evenTableHeights()">  
-                            <td>{{ pole.numOfHeads }}</td>
                             <td>{{ pole.bulbDesc }}</td>
+                            <td>{{ pole.numOfHeads }}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -153,7 +153,7 @@
              <accordion>
               <accordion-group ng-repeat="pole in activeProject.poles">
                 <accordion-heading>
-                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Fixture {{ pole.markerNum}}</div>
+                  <div id="{{ pole.poleID }}" ng-click="activateMarker(pole.poleID, $event)"><img src="webapp/images/marker.png" style="max-width: 19px;"></img> Site {{ pole.markerNum}}</div>
                 </accordion-heading>
                 <div class="col-md-9" >
                   <div class="table-responsive table-bordered">
