@@ -78,7 +78,7 @@
     <!-- Project Details -->
     <div id="detailsContainer" class="col-sm-8" style="display:none; padding-top: 10px; padding-right: 20px; margin-top: -10px;">
       <h3 id="detailsPanelHeader" class="page-header"><i class="fa fa-minus-square-o" id="detailsCrevron" style="font-size: 14px;"></i>
-        &nbsp;Project {{ activeProject.project_ID }} Details 
+        &nbsp;{{ activeProject.project_name }}
         <div class="pull-right" ng-switch on="activeProject.status_description">
             <span ng-switch-when="ACTIVE" class="badge alert-success">{{ activeProject.status_description }}</span>
             <span ng-switch-when="INACTIVE" class="badge alert-info">{{ activeProject.status_description }}</span>
