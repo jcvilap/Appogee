@@ -53,7 +53,8 @@ factory('commonFactory', function ($http){
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]),
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
-					LEDLeasePayment: i < 6 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentExpedited): Number(calculationsData.proposedYearByYearPowerCost[i]),
+					LEDLeasePayment: i < 1 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentStandard) - Number(calculationsData.taxAbandonment):i < 5 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentExpedited):
+                    Number(calculationsData.proposedYearByYearPowerCost[i]),
 					savings: Number(calculationsData.yearByYearSavings[i]),
 				};
 			};
@@ -65,7 +66,7 @@ factory('commonFactory', function ($http){
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]),
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
-					LEDLeasePayment: i < 6 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentStandard): Number(calculationsData.proposedYearByYearPowerCost[i]),
+					LEDLeasePayment: i < 1 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentStandard) - Number(calculationsData.taxAbandonment):i < 5 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentStandard): Number(calculationsData.proposedYearByYearPowerCost[i]),
 					savings: Number(calculationsData.yearByYearSavings[i]),	
 				};
 			};
