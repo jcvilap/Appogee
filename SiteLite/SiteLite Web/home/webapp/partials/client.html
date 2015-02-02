@@ -24,7 +24,7 @@
             <button id="ldBnt" type="button" class="btn btn-outline btn-primary">Light Drilldown</button>
           </div>
           <div class="btn-group">
-            <button id="spBnt" type="button" class="btn btn-outline btn-primary">Sales Presentations</button>
+            <button id="spBnt" type="button" class="btn btn-outline btn-primary">Proposal</button>
           </div>
         </div>
         <!-- Project Overview Panel-->
@@ -98,18 +98,18 @@
                   <div class="panel-body">
                     <div class="table-responsive" id="proposedLightFixtureTable" >
                       <table class="table table-hover" >
-                        <thead> <tr><th>Part No.</th><th>Description</th><th>Unit Cost</th><th>Quantity</th></tr> </thead>
+                        <thead> <tr><th>Part No.</th><th>Description</th><!--<th>Wattage</th>--><th>Quantity</th></tr> </thead>
                         <tbody>
                           <tr ng-repeat="pole in activeProject.lightFixtureTablePoles" on-finish-render="evenTableHeights()">  
                             <td>{{ pole.LEDpartNumber }}</td>
                             <td>{{ pole.LEDdesc }}</td>
-                            <td>${{ pole.LEDunitCost }}</td>
+                            <!--<td>W</td>-->
                             <td>{{ pole.numOfHeadsProposed}}</td>
                           </tr>
                           <tr class="alert alert-success" >
                             <td></td>
                             <td><b>Totals</b></td>
-                            <td>${{ activeProject.lightFixtureTotalUnitCost }}</td>
+<!--                            <td>W</td>-->
                             <td>{{ activeProject.lightFixtureTotalQuantity }} </td>
                           </tr>
                         </tbody>
