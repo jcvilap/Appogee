@@ -259,20 +259,20 @@
     
     //Existing Year-by-Year Power Cost **********************************************************************
     $arrayExistingYearCost = array();
-    for($year = 1; $year <= 10; $year++)
+    for($year = 0; $year <= 9; $year++)
     {
-        $yearCost = $sumLegacyWattage * ((($powerCostPerKWHBind/100 + ($costs["power_cost_increase"] * ($year-1))) * $costs["usage_hours"]) / 1000);
-        $arrayExistingYearCost[] = number_format($yearCost, 2, '.', '');
+        $yearCost = $sumLegacyWattage * ((($powerCostPerKWHBind/100 + ($costs["power_cost_increase"] * ($year))) * $costs["usage_hours"]) / 1000);
+        $arrayExistingYearCost[$year] = number_format($yearCost, 2, '.', '');
     }
     $response["existingYearByYearPowerCost"] = $arrayExistingYearCost;
     //Existing Year-by-Year Power Cost END ******************************************************************
     
     //Proposed Year-by-Year Power Cost **********************************************************************
     $arrayProposedYearCost = array();
-    for($year = 1; $year <= 10; $year++)
+    for($year = 0; $year <= 9; $year++)
     {
         $yearCost = $sumLEDWattage * ((($powerCostPerKWHBind/100 + ($costs["power_cost_increase"] * $year))  * $costs["usage_hours"]) / 1000);
-        $arrayProposedYearCost[] = number_format($yearCost, 2, '.', '');
+        $arrayProposedYearCost[$year] = number_format($yearCost, 2, '.', '');
     }
     $response["proposedYearByYearPowerCost"] = $arrayProposedYearCost;
     //Proposed Year-by-Year Power Cost END ******************************************************************
@@ -289,9 +289,9 @@
     
     //Year-By-Year Savings **********************************************************************************
     $arrayYearByYearSavings = array();
-    for($year = 1; $year <= 10; $year++)
+    for($year = 0; $year <= 9; $year++)
     {
-        if($year == 1)
+        if($year == 0)
         {
             $yearCost = $response["existingYearlyMaintenanceCost"] + $arrayExistingYearCost[$year] + $response["taxAbandonment"] - $arrayProposedYearCost[$year];
         }
@@ -300,7 +300,7 @@
             $yearCost = $response["existingYearlyMaintenanceCost"] + $arrayExistingYearCost[$year] - $arrayProposedYearCost[$year];
         }
         
-        $arrayYearByYearSavings[] = number_format($yearCost, 2, '.', '');
+        $arrayYearByYearSavings[$year] = number_format($yearCost, 2, '.', '');
     }
     $response["yearByYearSavings"] = $arrayYearByYearSavings;
     //Year-By-Year Savings END **********************************************************************************
@@ -326,20 +326,20 @@
 
     $sumSavings = 0;
 
-    $year = 1;
+    $year = 0;
 	
-    while ( $exceededCost == false)
+    while ( $exceededCost == false && $year <= 9)
     {
          if ($sumSavings < $response["totalCostStandard"])
         {
-            $sumSavings += $arrayYearByYearSavings[$year-1];
+            $sumSavings += $arrayYearByYearSavings[$year];
             $year++;
 			
         }
         
         else 
         {
-           $response["simplePaybackPeriodStandard"]= ((($response["totalCostStandard"]-$sumSavings)/$arrayYearByYearSavings[$year-1])+($year-1))*12;
+           $response["simplePaybackPeriodStandard"]= ((($response["totalCostStandard"]-$sumSavings)/$arrayYearByYearSavings[$year])+($year+1))*12;
             $exceededCost = true;
 			
         }
@@ -355,20 +355,20 @@
 
     $sumSavings = 0;
 
-    $year = 1;
+    $year = 0;
 	
-    while ( $exceededCost == false)
+    while ( $exceededCost == false && $year <= 9)
     {
          if ($sumSavings < $response["totalCostExpedited"])
         {
-            $sumSavings += $arrayYearByYearSavings[$year-1];
+            $sumSavings += $arrayYearByYearSavings[$year];
             $year++;
 			
         }
         
         else 
         {
-           $response["simplePaybackPeriodExpedited"]= ((($response["totalCostExpedited"]-$sumSavings)/$arrayYearByYearSavings[$year-1])+($year-1))*12;
+           $response["simplePaybackPeriodExpedited"]= ((($response["totalCostExpedited"]-$sumSavings)/$arrayYearByYearSavings[$year])+($year+1))*12;
             $exceededCost = true;
 			
         }
