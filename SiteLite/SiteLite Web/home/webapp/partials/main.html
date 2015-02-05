@@ -304,8 +304,8 @@
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Usage:</em></span> </br>
-                      {{ activeProject.calculationsData.existingMonthlyPowerUsage }} kWh
+                      </br><span class="text-muted small text-danger"><em><strong>Existing Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.existingMonthlyPowerUsage }} kWh</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="existingPowerUsage" style="height:200px; width : 100%;"></div>
@@ -313,8 +313,8 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Usage:</em></span> </br>
-                      {{ activeProject.calculationsData.proposedMonthlyPowerUsage }} kWh
+                      </br><span class="text-muted small text-success"><em><strong>LED Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.proposedMonthlyPowerUsage }} kWh</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="proposedPowerUsage" style="height:200px; width : 100%;"></div>
@@ -330,8 +330,8 @@
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.existingMonthlyPowerCost }}
+                        </br><span class="text-muted small text-danger"><em><strong>Existing Cost:</strong></em></span> </br>
+                      <strong>${{ activeProject.calculationsData.existingMonthlyPowerCost }}</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="existingPowerCost" style="height:200px; width : 100%;"></div>
@@ -339,8 +339,8 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.proposedMonthlyPowerCost }}
+                      </br><span class="text-muted small text-success"><em><strong>LED Cost:</strong></em></span> </br>
+                      <strong>${{ activeProject.calculationsData.proposedMonthlyPowerCost }}</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="proposedPowerCost" style="height:200px; width : 100%;"></div>
@@ -356,7 +356,7 @@
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-8 footprint-row">
-                      <h3 class="text-danger">Existing Footprint</h3>
+                      <h3 class="text-danger"><strong>Existing Footprint</strong></h3>
                       <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
                       <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
                     </div>
@@ -366,7 +366,7 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-8 footprint-row">
-                      <h3 class="text-success">LED Footprint</h3>
+                      <h3 class="text-success"><strong>LED Footprint</strong></h3>
                       <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
                       <strong>{{  toFormattedNumber(activeProject.calculationsData.proposedKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
                     </div>
@@ -384,8 +384,8 @@
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
+                      </br><span class="text-muted small text-danger"><em><strong>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
@@ -393,8 +393,8 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Maintenance Cost:</em></span> </br>
-                     $0.00
+                      </br><span class="text-muted small text-success"><em><strong>LED Maintenance Cost:</em></span> </br>
+                     $0.00</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
@@ -411,10 +411,10 @@
               <div class="col-md-4" style="margin-top:10px;">
                 <div class="btn-group btn-group-justified hidden-xs">
                   <div class="btn-group">
-                    <button id="upFrontPurchaseBt" class="btn btn-outline btn-primary" type="button" ng-click="paymentType='upFrontPurchase'"> Upfront Purchase</button>
+                    <button id="upFrontPurchaseBt" class="btn btn-outline btn-primary" type="button" ng-click="paymentType='upFrontPurchase'">Purchase</button>
                   </div>
                   <div class="btn-group">
-                    <button id="leaseToOwnBt" class="btn btn-outline btn-primary radio-btn-selected" type="button" ng-click="paymentType='leaseToOwn'"> Lease To Own</button>
+                    <button id="leaseToOwnBt" class="btn btn-outline btn-primary radio-btn-selected" type="button" ng-click="paymentType='leaseToOwn'">Finance</button>
                   </div>
                 </div>
               </div>
@@ -487,10 +487,10 @@
                           </b></em></span>
                         </a>
                         <div ng-if="activeView == 'expeditedShipping'">
-                          <a class="list-group-item total"><b>Immediate Monthly Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsExpedited }}</b></em></span></a>
+                          <a class="list-group-item total"><b>Immediate Monthly Operational Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsExpedited }}</b></em></span></a>
                         </div>
                         <div ng-if="activeView == 'standardShipping'">
-                          <a class="list-group-item total"><b>Immediate Monthly Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsStandard }}</b></em></span></a>
+                          <a class="list-group-item total"><b>Immediate Monthly Operational Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsStandard }}</b></em></span></a>
                         </div>
                       </div>
                     </div>
@@ -526,10 +526,10 @@
                       <div id="morris-area-chart"></div>
                     </div>
                     <div class="col-sm-12" style="margin: 15px 15px 15px 0px; font-size: 11px;">
-                      <div style="padding: 0px;" class="col-sm-6 col-md-3 "><span class="leyend label" style="background-color: LimeGreen;"> </span>LED Lease Costs</div>
-                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: DarkSeaGreen;"> </span>LED Power Consumption</div>
-                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: Brown;"> </span>Maintenance Costs</div>
-                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: DarkSalmon;"> </span>Existing Power Consumption</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3 "><span class="leyend label" style="background-color: #CC0000;"> </span>LED Finance Payments</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: #990000;"> </span>LED Power Costs</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: #009900;"> </span>Maintenance Savings</div>
+                      <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: #00CC00;"> </span>Power Savings</div>
                     </div>
                   </div>
                 </div>

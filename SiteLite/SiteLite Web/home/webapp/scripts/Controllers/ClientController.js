@@ -57,13 +57,19 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 					data: $scope.activeProject.stats ,
 					xkey: 'year',
 					ykeys: ['existingMantenanceCost', 'existingPowerCost', 'LEDLeasePayment', 'proposedPowerCost'],
-					labels: ['Maintenance Costs', 'Existing Power Consuption', 'LED Lease Costs', 'LED Power Consuption'],
-					lineColors: ['Brown','DarkSalmon ','LimeGreen','DarkSeaGreen'],
+					labels: ['Maintenance Savings', 'Power Savings', 'LED Finance Payments', 'LED Power Costs'],
+					lineColors: ["#009900","#00CC00","#CC0000","#990000"],
 					pointSize: 2,
 					hideHover: 'auto',
 					resize: true,
 					behaveLikeLine: true
-				});
+                    
+				}
+                
+                );
+                
+                //var balloon = $scope.areaChart.balloon;
+                //balloon.hide();
 
 	    		var powerUsageInterval= (((Number(calculationsData.existingYearByYearPowerCost[0])/12).toFixed(2)/Number($scope.activeProject.power_cost_per_kWh))/5).toFixed(0);
 	    		var existingPowerUsageChart = AmCharts.makeChart("existingPowerUsage", {
@@ -202,6 +208,9 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 			}
 			else {
 	    		$scope.areaChart.setData($scope.activeProject.stats);
+                
+                //var balloon = areaChart.balloon;
+                //$scope.areaChart.balloon.hide();
 	    	}
 		});
 	});

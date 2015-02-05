@@ -85,8 +85,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 					data: $scope.activeProject.stats ,
 					xkey: 'year',
 					ykeys: ['existingMantenanceCost', 'existingPowerCost', 'LEDLeasePayment', 'proposedPowerCost'],
-					labels: ['Maintenance Costs', 'Existing Power Consuption', 'LED Lease Costs', 'LED Power Consuption'],
-					lineColors: ['Brown','DarkSalmon ','LimeGreen','DarkSeaGreen'],
+					labels: ['Maintenance Savings', 'Power Savings', 'LED Finance Payments', 'LED Power Costs'],
+					lineColors: ["#009900","#00CC00","#CC0000","#990000"],
 					pointSize: 2,
 					hideHover: 'auto',
 					resize: true,
@@ -357,6 +357,9 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 			$scope.activeProject.calculationsData.monthlyLeasePaymentExpedited = commonFactory.toFormattedNumber(data.monthlyLeasePaymentExpedited);
 			$scope.activeProject.calculationsData.existingMonthlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost)/12);
 			$scope.activeProject.calculationsData.existingYearlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost));
+            
+            
+            
 		});
 
 		$('#poBnt').trigger('click');

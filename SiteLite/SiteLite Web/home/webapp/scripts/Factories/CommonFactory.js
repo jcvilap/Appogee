@@ -25,7 +25,7 @@ factory('commonFactory', function ($http){
 		if($scope.activeView == 'expeditedShipping' && $scope.paymentType == 'upFrontPurchase'){
 			for (var i = 0; i < 10; i++) {
 				stats[i] = {
-					year: (new Date().getFullYear() + i + 1).toString(),
+					year: (new Date().getFullYear() + i).toString(),
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]),
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
@@ -37,7 +37,7 @@ factory('commonFactory', function ($http){
 		else if($scope.activeView == 'standardShipping' && $scope.paymentType == 'upFrontPurchase'){
 			for (var i = 0; i < 10; i++) {
 				stats[i] = {
-					year: (new Date().getFullYear() + i + 1).toString(),
+					year: (new Date().getFullYear() + i).toString(),
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]) ,
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
@@ -49,7 +49,7 @@ factory('commonFactory', function ($http){
 		else if($scope.activeView == 'expeditedShipping' && $scope.paymentType == 'leaseToOwn'){
 			for (var i = 0; i < 10; i++) {
 				stats[i] = {
-					year: (new Date().getFullYear() + i + 1).toString(),
+					year: (new Date().getFullYear() + i).toString(),
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]),
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
@@ -62,7 +62,7 @@ factory('commonFactory', function ($http){
 		else if($scope.activeView == 'standardShipping' && $scope.paymentType == 'leaseToOwn'){
 			for (var i = 0; i < 10; i++) {
 				stats[i] = {
-					year: (new Date().getFullYear() + i + 1).toString(),
+					year: (new Date().getFullYear() + i).toString(),
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]),
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
