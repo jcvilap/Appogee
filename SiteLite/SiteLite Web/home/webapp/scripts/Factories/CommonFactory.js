@@ -6,8 +6,8 @@ factory('commonFactory', function ($http){
 	var factory = {};
 	var $scope; 
 
-	//factory.baseUrl = "http://ec2-54-84-156-215.compute-1.amazonaws.com";
-	factory.baseUrl = "..";
+	factory.baseUrl = "http://ec2-54-84-156-215.compute-1.amazonaws.com";
+	//factory.baseUrl = "..";
 
 
 	// Update scope from outside component
@@ -53,7 +53,7 @@ factory('commonFactory', function ($http){
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]),
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
-					LEDLeasePayment: i < 1 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentExpedited) - Number(calculationsData.taxAbandonment):i < 5 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentExpedited):
+					LEDLeasePayment: i < 5 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentExpedited):
                     Number(calculationsData.proposedYearByYearPowerCost[i]),
 					savings: Number(calculationsData.yearByYearSavings[i]),
 				};
@@ -66,7 +66,7 @@ factory('commonFactory', function ($http){
 					existingPowerCost: Number(calculationsData.existingYearByYearPowerCost[i]),
 					existingMantenanceCost: Number(calculationsData.existingYearByYearPowerCost[i]) + Number(calculationsData.existingYearlyMaintenanceCost),
 					proposedPowerCost: Number(calculationsData.proposedYearByYearPowerCost[i]),
-					LEDLeasePayment: i < 1 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentStandard) - Number(calculationsData.taxAbandonment):i < 5 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentStandard): Number(calculationsData.proposedYearByYearPowerCost[i]),
+					LEDLeasePayment: i < 5 ? Number(calculationsData.proposedYearByYearPowerCost[i]) + Number(calculationsData.yearlyLeasePaymentStandard): Number(calculationsData.proposedYearByYearPowerCost[i]),
 					savings: Number(calculationsData.yearByYearSavings[i]),	
 				};
 			};

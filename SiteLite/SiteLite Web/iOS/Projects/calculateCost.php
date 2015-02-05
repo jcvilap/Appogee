@@ -205,11 +205,11 @@
     {
         if(($response["productCostStandard"] + $response["installationCost"]) < $costs["tax_rate_cutoff"])
         {
-            $salesTaxStandard = $costs["low_tax_rate"] * ($response["productCostStandard"] + $response["installationCost"]);
+            $salesTaxStandard = $costs["low_tax_rate"] * $response["productCostStandard"];
         }
         else
         {
-            $salesTaxStandard = $costs["county_sur_tax"] + $costs["high_tax_rate"] * ($response["productCostStandard"] + $response["installationCost"] - $costs["tax_rate_cutoff"]);
+            $salesTaxStandard = $costs["county_sur_tax"] + $costs["high_tax_rate"] * ($response["productCostStandard"] + $costs["tax_rate_cutoff"]);
         }
     }
     else
@@ -224,11 +224,11 @@
     {
         if(($response["productCostExpedited"] + $response["installationCost"]) < $costs["tax_rate_cutoff"])
         {
-            $salesTaxExpedited = $costs["low_tax_rate"] * ($response["productCostExpedited"] + $response["installationCost"]);
+            $salesTaxExpedited = $costs["low_tax_rate"] * $response["productCostExpedited"];
         }
         else
         {
-            $salesTaxExpedited = $costs["county_sur_tax"] + $costs["high_tax_rate"] * ($response["productCostExpedited"] + $response["installationCost"] - $costs["tax_rate_cutoff"]);
+            $salesTaxExpedited = $costs["county_sur_tax"] + $costs["high_tax_rate"] * ($response["productCostExpedited"] - $costs["tax_rate_cutoff"]);
         }
     }
     else
@@ -280,7 +280,7 @@
     //Tax Abandonment ***************************************************************************************
     $dateDifference = date("Y") - $dateOfServiceBind;
     $taxAbandonment = $costs["abandonment_multiplier"] * (1 - $dateDifference / 39) * $sumExistingMaintenanceCost;
-    if($taxAbandonment < 0)
+    if($taxAbandonment < 2500)
     {
         $taxAbandonment = 0;
     }
@@ -339,7 +339,7 @@
         
         else 
         {
-           $response["simplePaybackPeriodStandard"]= ((($response["totalCostStandard"]-$sumSavings)/$arrayYearByYearSavings[$year])+($year+1))*12;
+           $response["simplePaybackPeriodStandard"]= (((($response["totalCostStandard"]-$sumSavings)/$arrayYearByYearSavings[$year])*12)+$year);
             $exceededCost = true;
 			
         }
@@ -368,7 +368,7 @@
         
         else 
         {
-           $response["simplePaybackPeriodExpedited"]= ((($response["totalCostExpedited"]-$sumSavings)/$arrayYearByYearSavings[$year])+($year+1))*12;
+           $response["simplePaybackPeriodExpedited"]= (((($response["totalCostExpedited"]-$sumSavings)/$arrayYearByYearSavings[$year])*12)+$year);
             $exceededCost = true;
 			
         }

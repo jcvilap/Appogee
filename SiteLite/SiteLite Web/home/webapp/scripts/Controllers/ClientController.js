@@ -60,7 +60,7 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 					labels: ['Maintenance Savings', 'Power Savings', 'LED Finance Payments', 'LED Power Costs'],
 					lineColors: ["#009900","#00CC00","#CC0000","#990000"],
 					pointSize: 2,
-					hideHover: 'auto',
+					hideHover: 'always',
 					resize: true,
 					behaveLikeLine: true
                     
@@ -310,6 +310,9 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
         	$scope.activeProject.calculationsData.existingMonthlyPowerUsage = commonFactory.toFormattedNumber(((Number(data.existingYearByYearPowerCost[0])/12).toFixed(2)/Number($scope.activeProject.power_cost_per_kWh)));
         	$scope.activeProject.calculationsData.proposedMonthlyPowerUsage = commonFactory.toFormattedNumber(($scope.activeProject.calculationsData.proposedMonthlyPowerCost/Number($scope.activeProject.power_cost_per_kWh)));
         	$scope.activeProject.calculationsData.powerSavings = commonFactory.toFormattedNumber(Number(data.existingYearByYearPowerCost[0]) - Number(data.proposedYearByYearPowerCost[0]));
+			
+			$scope.activeProject.calculationsData.totalPowerSavings = commonFactory.toFormattedNumber((Number(data.existingYearByYearPowerCost[5]) - Number(data.proposedYearByYearPowerCost[4])) * 10);
+			
         	$scope.activeProject.calculationsData.immediateMonthlySavingsExpedited = commonFactory.toFormattedNumber(
         		Number(data.existingYearlyMaintenanceCost)/12 + 
         		Number(data.existingYearByYearPowerCost[0])/12 - 
@@ -324,6 +327,9 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 			$scope.activeProject.calculationsData.monthlyLeasePaymentExpedited = commonFactory.toFormattedNumber(data.monthlyLeasePaymentExpedited);
 			$scope.activeProject.calculationsData.existingMonthlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost)/12);
 			$scope.activeProject.calculationsData.existingYearlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost));
+			
+			$scope.activeProject.calculationsData.existingTotalMaintenanceCost = commonFactory.toFormattedNumber(Number((data.existingYearlyMaintenanceCost) * 10));
+			
 		});
 
 		$('#poBnt').trigger('click');
@@ -436,6 +442,8 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 		var data = $scope.activeProject.poles;
 		var totalLightFixtureQuantity = 0;
 		var totalLightFixtureUnitCost = 0.0;
+		
+		var totalLightFixtureQuantityExisting = 0;
 
 		// existing fields
 		var numExistingFeature = 0, existingFeatureDesc ='';
@@ -479,6 +487,8 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 
             /*************** Existing Stats ***********************/
 			// Extract existing poles with same bulbID
+			totalLightFixtureQuantityExisting += Number(data[i].numOfHeads);
+			
             var existingGroup = _.where(data, {bulbID: data[i].bulbID});
 
             // Check if existingGroup was not added already to groupedPoles list
@@ -506,6 +516,9 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
         $scope.activeProject.existingLightFixtureTablePoles = existingGroupedPoles;
         $scope.activeProject.lightFixtureTotalUnitCost = totalLightFixtureUnitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         $scope.activeProject.lightFixtureTotalQuantity = totalLightFixtureQuantity;
+		
+		$scope.activeProject.lightFixtureTotalQuantityExisting = totalLightFixtureQuantityExisting;
+
 
         // TODO Calculate existing fixtures fields and add them to scope
         // <td>{{ pole.numExistingFeature }}</td>

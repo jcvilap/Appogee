@@ -212,7 +212,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 				         		  { "color": "#fdd400", "endValue":  maintenanceCostInterval*4, "innerRadius": "92%", "startValue":  maintenanceCostInterval*2 },
 				         		  { "color": "#cc4748", "endValue":  maintenanceCostInterval*6, "innerRadius": "90%", "startValue":  maintenanceCostInterval*4 }
 				         ],
-				        "bottomText": $scope.activeProject.calculationsData.monthlyLeasePaymentStandard,
+				        "bottomText": 0.00,
 				        "bottomTextYOffset": 8,
 				        "endValue": maintenanceCostInterval*6
 				    }],
@@ -342,6 +342,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
         	$scope.activeProject.calculationsData.proposedMonthlyPowerUsage = commonFactory.toFormattedNumber(((Number(data.proposedYearByYearPowerCost[0])/12)/Number($scope.activeProject.power_cost_per_kWh)));
             
         	$scope.activeProject.calculationsData.powerSavings = commonFactory.toFormattedNumber(Number(data.existingYearByYearPowerCost[0]) - Number(data.proposedYearByYearPowerCost[0]));
+			
+			$scope.activeProject.calculationsData.totalPowerSavings = commonFactory.toFormattedNumber((Number(data.existingYearByYearPowerCost[5]) - Number(data.proposedYearByYearPowerCost[4])) * 10);
             
         	$scope.activeProject.calculationsData.immediateMonthlySavingsExpedited = commonFactory.toFormattedNumber(
         		Number(data.existingYearlyMaintenanceCost)/12 + 
@@ -357,6 +359,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 			$scope.activeProject.calculationsData.monthlyLeasePaymentExpedited = commonFactory.toFormattedNumber(data.monthlyLeasePaymentExpedited);
 			$scope.activeProject.calculationsData.existingMonthlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost)/12);
 			$scope.activeProject.calculationsData.existingYearlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost));
+			
+			$scope.activeProject.calculationsData.existingTotalMaintenanceCost = commonFactory.toFormattedNumber(Number((data.existingYearlyMaintenanceCost)*10));
             
             
             
@@ -521,6 +525,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		var data = $scope.activeProject.poles;
 		var totalLightFixtureQuantity = 0;
 		var totalLightFixtureUnitCost = 0.0;
+		
+		var totalLightFixtureQuantityExisting = 0;
 
 		// existing fields
 		var numExistingFeature = 0, existingFeatureDesc ='';
@@ -535,6 +541,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
         	/********* Proposed Stats ************/
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
         	totalLightFixtureUnitCost += Number(data[i].LEDunitCost);
+			
+			
 
             // Extract elements with the same LEDpartNumber 
             var group = _.where(data, {LEDpartNumber: data[i].LEDpartNumber});
@@ -564,6 +572,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 
             /*************** Existing Stats ***********************/
 			// Extract existing poles with same bulbID
+			totalLightFixtureQuantityExisting += Number(data[i].numOfHeads);
+			
             var existingGroup = _.where(data, {bulbID: data[i].bulbID});
 
             // Check if existingGroup was not added already to groupedPoles list
@@ -591,6 +601,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
         $scope.activeProject.existingLightFixtureTablePoles = existingGroupedPoles;
         $scope.activeProject.lightFixtureTotalUnitCost = totalLightFixtureUnitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         $scope.activeProject.lightFixtureTotalQuantity = totalLightFixtureQuantity;
+		
+		$scope.activeProject.lightFixtureTotalQuantityExisting = totalLightFixtureQuantityExisting;
 
         // TODO Calculate existing fixtures fields and add them to scope
         // <td>{{ pole.numExistingFeature }}</td>
