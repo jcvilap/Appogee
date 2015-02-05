@@ -204,15 +204,15 @@
               </div>
             </div>
            
-            <!-- Power Usage Now -->
+           <!-- Power Usage Now -->
             <div class="col-md-6">
               <div id="powerUsagePanel" class="panel panel-default">
                 <div class="panel-heading "><i class="fa fa-plug"></i> Monthly Power Usage</div>
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Usage:</em></span> </br>
-                      {{ activeProject.calculationsData.existingMonthlyPowerUsage }} kWh
+                      </br><span class="text-muted small text-danger"><em><strong>Existing Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.existingMonthlyPowerUsage }} kWh</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="existingPowerUsage" style="height:200px; width : 100%;"></div>
@@ -220,8 +220,8 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Usage:</em></span> </br>
-                      {{ activeProject.calculationsData.proposedMonthlyPowerUsage }} kWh
+                      </br><span class="text-muted small text-success"><em><strong>LED Usage:</em></span> </br>
+                      {{ activeProject.calculationsData.proposedMonthlyPowerUsage }} kWh</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="proposedPowerUsage" style="height:200px; width : 100%;"></div>
@@ -237,8 +237,8 @@
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.existingMonthlyPowerCost }}
+                        </br><span class="text-muted small text-danger"><em><strong>Existing Cost:</strong></em></span> </br>
+                      <strong>${{ activeProject.calculationsData.existingMonthlyPowerCost }}</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="existingPowerCost" style="height:200px; width : 100%;"></div>
@@ -246,8 +246,8 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.proposedMonthlyPowerCost }}
+                      </br><span class="text-muted small text-success"><em><strong>LED Cost:</strong></em></span> </br>
+                      <strong>${{ activeProject.calculationsData.proposedMonthlyPowerCost }}</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="proposedPowerCost" style="height:200px; width : 100%;"></div>
@@ -263,9 +263,9 @@
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-8 footprint-row">
-                      <h3 class="text-danger">Existing Footprint</h3>
+                      <h3 class="text-danger"><strong>Existing Footprint</strong></h3>
                       <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
-                      {{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>      
                     </div>
                     <div class="col-sm-4" style="padding: 25px;">
                       <img width="80%" style="max-width: 80px; min-width: 50px;" src="webapp/images/coal.png">
@@ -273,9 +273,9 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-8 footprint-row">
-                      <h3 class="text-success">LED Footprint</h3>
+                      <h3 class="text-success"><strong>LED Footprint</strong></h3>
                       <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
-                      {{  toFormattedNumber(activeProject.calculationsData.proposedKgCoal) }} <small>lbs</small><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
+                      <strong>{{  toFormattedNumber(activeProject.calculationsData.proposedKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
                     </div>
                     <div class="col-sm-4" style="padding: 50px;">
                       <img width="60%" style="max-width:50px; min-width: 30px;" src="webapp/images/coal.png">
@@ -283,7 +283,7 @@
                   </div>
                 </div>
               </div>
-            </div> 
+            </div>
             <!-- Maintenance Cost -->
             <div class="col-md-6">
               <div id="maintenanceCostPanel" class="panel panel-default">
@@ -291,8 +291,8 @@
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-danger"><em>Existing Cost:</em></span> </br>
-                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}
+                      </br><span class="text-muted small text-danger"><em><strong>Existing Cost:</em></span> </br>
+                      ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="existingMaintenanceCost" style="height:200px; width : 100%;"></div>
@@ -300,8 +300,8 @@
                   </div>
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">
-                      </br><span class="text-muted small text-success"><em>LED Cost:</em></span> </br>
-                     $0.00
+                      </br><span class="text-muted small text-success"><em><strong>LED Cost:</em></span> </br>
+                     $0.00</strong>
                     </div>
                     <div class="col-sm-6">
                       <div id="proposedMaintenanceCost" style="height:200px; width : 100%;"></div>
@@ -310,7 +310,7 @@
                 </div>
               </div> 
             </div>
-            
+             
 
             <!-- Options Row -->
             <div class="col-md-12" style="padding:20px 60px 30px 60px">
