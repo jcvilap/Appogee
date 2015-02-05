@@ -339,7 +339,7 @@
         
         else 
         {
-           $response["simplePaybackPeriodStandard"]= (((($response["totalCostStandard"]-$sumSavings)/$arrayYearByYearSavings[$year])*12)+$year);
+           $response["simplePaybackPeriodStandard"]= (((($response["totalCostStandard"]-$sumSavings)/$arrayYearByYearSavings[$year])+$year)*12);
             $exceededCost = true;
 			
         }
@@ -368,7 +368,7 @@
         
         else 
         {
-           $response["simplePaybackPeriodExpedited"]= (((($response["totalCostExpedited"]-$sumSavings)/$arrayYearByYearSavings[$year])*12)+$year);
+           $response["simplePaybackPeriodExpedited"]= (((($response["totalCostExpedited"]-$sumSavings)/$arrayYearByYearSavings[$year])+$year)*12);
             $exceededCost = true;
 			
         }
