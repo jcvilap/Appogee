@@ -90,7 +90,9 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 					pointSize: 2,
 					hideHover: 'auto',
 					resize: true,
-					behaveLikeLine: true
+					behaveLikeLine: true,
+					smooth: false,
+					preUnits: '$'
 				});
 
 	    		var powerUsageInterval= (((Number(calculationsData.existingYearByYearPowerCost[0])/12).toFixed(2)/Number($scope.activeProject.power_cost_per_kWh))/5).toFixed(0);

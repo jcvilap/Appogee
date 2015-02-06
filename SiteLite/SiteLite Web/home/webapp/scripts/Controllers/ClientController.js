@@ -62,7 +62,9 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 					pointSize: 2,
 					hideHover: 'always',
 					resize: true,
-					behaveLikeLine: true
+					behaveLikeLine: true,
+					smooth: false,
+					preUnits: '$'
                     
 				}
                 
