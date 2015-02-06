@@ -581,16 +581,16 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
             if(previouslyAddedExistingPole.length == 0){// If item not repeated, add to existing list
                 if (existingGroup.length == 1) {
                     existingGroupedPoles.push(
-                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID')
+                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist')
                     );
                 }                
                 // if item repeated, calculate the total numOfHeads save it
                 else if (existingGroup.length > 1) {
                     var totalNumOfHeads = 0;
                     for (var j = 0; j < existingGroup.length; j++) {
-                        totalNumOfHeads += Number(existingGroup[j].numOfHeadsProposed);
+                        totalNumOfHeads += Number(existingGroup[j].numOfHeads);
                     };
-                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID');
+                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist');
                     aux['numOfHeads'] = totalNumOfHeads;
                     existingGroupedPoles.push(aux);
                 }

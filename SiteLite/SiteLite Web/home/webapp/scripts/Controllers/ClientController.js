@@ -311,7 +311,7 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
         	$scope.activeProject.calculationsData.proposedMonthlyPowerUsage = commonFactory.toFormattedNumber(($scope.activeProject.calculationsData.proposedMonthlyPowerCost/Number($scope.activeProject.power_cost_per_kWh)));
         	$scope.activeProject.calculationsData.powerSavings = commonFactory.toFormattedNumber(Number(data.existingYearByYearPowerCost[0]) - Number(data.proposedYearByYearPowerCost[0]));
 			
-			$scope.activeProject.calculationsData.totalPowerSavings = commonFactory.toFormattedNumber((Number(data.existingYearByYearPowerCost[5]) - Number(data.proposedYearByYearPowerCost[4])) * 10);
+			$scope.activeProject.calculationsData.totalPowerSavings = commonFactory.toFormattedNumber((Number(data.existingYearByYearPowerCost[0]) - Number(data.proposedYearByYearPowerCost[0])) * 10);
 			
         	$scope.activeProject.calculationsData.immediateMonthlySavingsExpedited = commonFactory.toFormattedNumber(
         		Number(data.existingYearlyMaintenanceCost)/12 + 
@@ -328,8 +328,11 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 			$scope.activeProject.calculationsData.existingMonthlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost)/12);
 			$scope.activeProject.calculationsData.existingYearlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost));
 			
-			$scope.activeProject.calculationsData.existingTotalMaintenanceCost = commonFactory.toFormattedNumber(Number((data.existingYearlyMaintenanceCost) * 10));
+//			$scope.activeProject.calculationsData.existingTotalMaintenanceCost = commonFactory.toFormattedNumber(Number($scope.activeProject.calculationsData.totalSavings)-Number($scope.activeProject.calculationsData.totalPowerSavings));
 			
+			$scope.activeProject.calculationsData.existingTotalMaintenanceCost = commonFactory.toFormattedNumber(
+        		Number(data.existingYearlyMaintenanceCost)*10)
+		
 		});
 
 		$('#poBnt').trigger('click');
@@ -496,16 +499,16 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
             if(previouslyAddedExistingPole.length == 0){// If item not repeated, add to existing list
                 if (existingGroup.length == 1) {
                     existingGroupedPoles.push(
-                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID')
+                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist')
                     );
                 }                
                 // if item repeated, calculate the total numOfHeads save it
                 else if (existingGroup.length > 1) {
                     var totalNumOfHeads = 0;
                     for (var j = 0; j < existingGroup.length; j++) {
-                        totalNumOfHeads += Number(existingGroup[j].numOfHeadsProposed);
+                        totalNumOfHeads += Number(existingGroup[j].numOfHeads);
                     };
-                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID');
+                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist');
                     aux['numOfHeads'] = totalNumOfHeads;
                     existingGroupedPoles.push(aux);
                 }

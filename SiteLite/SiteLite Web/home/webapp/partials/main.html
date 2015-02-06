@@ -255,9 +255,15 @@
                       <tbody>
                         <tr>  
                           <td>Existing Fixture</td>
-                          <td>{{ pole.bulbDesc }} </td>
-                          <td>{{ pole.numOfHeads }}</td>
-                          <td>{{ pole.legWattage }}</td>
+							<td ng-if="pole.poleExist == 0">No light here currently</td>
+							<td ng-if="pole.poleExist == 1">{{ pole.bulbDesc }} </td>
+                   
+                          <td ng-if="pole.poleExist == 1">{{ pole.numOfHeads }}</td>
+							<td ng-if="pole.poleExist == 0">N/A</td>
+							
+							<td ng-if="pole.poleExist == 1">{{ pole.legWattage }}</td>
+							<td ng-if="pole.poleExist == 0">N/A</td>
+                         
                         </tr>
                         <tr>  
                           <td>Proposed Fixture</td>
@@ -461,7 +467,7 @@
                       <a class="list-group-item">Power Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.totalPowerSavings }}</em></span> </a>
                       <a class="list-group-item">Maintenance Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.existingTotalMaintenanceCost }}</em></span> </a>
                       <a class="list-group-item">Net Tax Rebate*<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.taxAbandonment) }}</em></span> </a>
-                      <a class="list-group-item total"><b>Total Savings</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.yearByYearSavings[0]) }}</b></em></span></a>
+                      <a class="list-group-item total"><b>Total Savings</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.totalSavings) }}</b></em></span></a>
                     </div>
                   </accordion-group>
                   <accordion-group>
