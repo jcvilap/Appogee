@@ -22,8 +22,10 @@
   </ul>
 </div>
 
-<!-- Google maps container -->
+<!-- Google maps canvas -->
 <div id="map-canvas" class="hidden-xs"></div>
+
+<!-- Body Containier -->
 <div class="container-fluid" id="main">
   <div id="middleContainer" class="row">
     <!-- Projects -->
@@ -299,7 +301,7 @@
               </div>
               <!-- User -->
               <div class="col-md-4">
-                <h3 style="margin: 20px 0 40px 25px;">{{ activeProject.first_name }} {{ activeProject.last_name }}</br> <small><i>{{ activeProject.user_title }}</i></small></h3>
+                <h3 style="margin: 20px 0px 30px 25px;">{{ activeProject.first_name }} {{ activeProject.last_name }}</br> <small><i>{{ activeProject.user_title }}</i></small></h3>
               </div>
             </div>
             
@@ -409,10 +411,9 @@
                 </div>
               </div> 
             </div>
-             
 
             <!-- Options Row -->
-            <div class="col-md-12" style="padding:20px 60px 30px 60px">
+            <div class="col-md-12" style="padding: 10px 60px 20px;">
               <!-- Radios #2 -->
               <div class="col-md-4" style="margin-top:10px;">
                 <div class="btn-group btn-group-justified hidden-xs">
@@ -428,10 +429,10 @@
               <div class="col-md-4 col-md-offset-4" style="margin-top:10px;">  
                 <div class="btn-group btn-group-justified hidden-xs">
                   <div class="btn-group">
-                    <button id="expeditedShippingBt" class="btn btn-outline btn-primary" type="button" ng-click="activeView='expeditedShipping'"> Expedited Shipping</button>
+                    <button id="expeditedShippingBt" class="btn btn-outline btn-primary" type="button" ng-click="changeProposedOperationalCostChart(savingsMethod, 'expeditedShipping'); activeView='expeditedShipping';"> Expedited Shipping</button>
                   </div>
                   <div class="btn-group">
-                    <button id="standardShippingBt" class="btn btn-outline btn-primary radio-btn-selected" type="button" ng-click="activeView='standardShipping'"> Standard Shipping</button>
+                    <button id="standardShippingBt" class="btn btn-outline btn-primary radio-btn-selected" type="button" ng-click="changeProposedOperationalCostChart(savingsMethod, 'standardShipping'); activeView='standardShipping'"> Standard Shipping</button>
                   </div>
                 </div>
               </div>
@@ -526,16 +527,70 @@
                   <div class="panel-heading"><i class="fa fa-bar-chart-o fa-fw"></i> Cost Comparison</div>
                   <div class="panel-body">
                     <div class="col-sm-12">
-                      <h3 style="margin: 0"><i class="timeline-badge fa fa-check"></i>Total Savings:<small style="margin:10px;"> $ {{ activeProject.totalSavings }}</small> </h3>
+                      <h3 style="margin: 0"><i class="timeline-badge fa fa-check" style="marging-top:5px"></i>Total Savings: <i class="label label-success arkon-label-success">${{ activeProject.totalSavings }}</i> </h3>
                     </div>
                     <div class="col-sm-12">
-                      <div id="morris-area-chart"></div>
+                      <div id="morris-area-chart" style="height: 300px;"></div>
                     </div>
-                    <div class="col-sm-12" style="margin: 15px 15px 15px 0px; font-size: 11px;">
+                    <div class="col-sm-12" style="margin: 15px 15px 0px 0px; font-size: 11px;">
                       <div style="padding: 0px;" class="col-sm-6 col-md-3 "><span class="leyend label" style="background-color: #CC0000;"> </span>LED Finance Payments</div>
                       <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: #990000;"> </span>LED Power Costs</div>
                       <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: #009900;"> </span>Maintenance Savings</div>
                       <div style="padding: 0px;" class="col-sm-6 col-md-3"><span class="leyend label" style="background-color: #00CC00;"> </span>Power Savings</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Monthly Operations Savings Row -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default" id="operationalSavingsPanel" style="margin-bottom: 0;">
+                  <div class="panel-heading"><i class="fa fa-money" style="margin-top: 0;"></i> Total Monthly Operational Savings</div>
+                  <div class="panel-body">
+                    <!-- Heading -->
+                    <div class="col-sm-12" style="margin-bottom: 20px;">
+
+                      <div class="col-md-8" style="padding-left: 0;">  
+                        <h3 style="margin: 0"><i class="timeline-badge fa fa-check" style="marging-top:5px"></i>Total Monthly Operational Savings: 
+                          <span class="text-success" ng-if="savingsMethod=='immediate'&&activeView=='standardShipping' " ><i class="label label-success arkon-label-success">${{ activeProject.calculationsData.immediateMonthlySavingsStandard }}</i></span>
+                          <span class="text-success" ng-if="savingsMethod=='immediate'&&activeView=='expeditedShipping'" ><i class="label label-success arkon-label-success">${{ activeProject.calculationsData.immediateMonthlySavingsExpedited }}</i></span>
+                          <span class="text-success" ng-if="savingsMethod=='longTerm'" ><i class="label label-success arkon-label-success">${{ activeProject.calculationsData.operationalSavingsLongTerm }}</i></span>
+                        </h3>
+                      </div>
+
+                      <!-- Radios -->
+                      <div class="col-md-4 pull-right" style="margin-top:10px;">  
+                        <div class="btn-group btn-group-justified hidden-xs">
+                          <div class="btn-group">
+                            <button id="immediateBt" class="btn btn-outline btn-primary radio-btn-selected" type="button" ng-click="changeProposedOperationalCostChart('immediate', activeView); savingsMethod='immediate'; "> Immediate</button>
+                          </div>
+                          <div class="btn-group">
+                            <button id="longTermBt" class="btn btn-outline btn-primary" type="button" ng-click="changeProposedOperationalCostChart('longTerm', activeView); savingsMethod='longTerm'; "> Long Term</button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <!-- Body -->
+                    <div class="col-sm-6 gadget-list-item">
+                      <div class="col-sm-6">
+                        </br><span class="text-muted small text-danger"><em><strong>Existing Monthly Operational Cost:</em></span></br>
+                        ${{ existingMonthlyOperationalCost }}</strong>
+                      </div>
+                      <div class="col-sm-6">
+                        <div id="existingMonthlyOperationalCost" style="height:200px; width : 100%;"></div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 gadget-list-item">
+                      <div class="col-sm-6">
+                        </br><span class="text-muted small text-success"><em><strong>LED Monthly Operational Cost:</em></span></br>
+                       ${{ proposedMonthlyOperationalCost }}</strong>
+                      </div>
+                      <div class="col-sm-6">
+                        <div id="proposedMonthlyOperationalCost" style="height:200px; width : 100%;"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -550,7 +605,6 @@
   </div>
 </div>
 
-
 <!-- Progressbar Modal -->
 <div  id="progressModal" class="modal fade">
   <div class="modal-dialog">
@@ -564,6 +618,5 @@
   </div>
   </div>
 </div>
-
 
 </div>

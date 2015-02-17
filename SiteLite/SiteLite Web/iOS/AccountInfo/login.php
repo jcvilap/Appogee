@@ -6,7 +6,7 @@
     
     require("../../../inc/connectionString.php");
 
-    $strSQL = "SELECT unique_user_id, password, type, user_status, first_name, last_name FROM Users WHERE email = ?";
+    $strSQL = "SELECT unique_user_id, password, type, user_status, first_name, last_name, phone_number FROM Users WHERE email = ?";
     $strSQLParams = $_REQUEST['email'];
     if($stmt = $mysqli->prepare($strSQL))
     {
@@ -26,7 +26,7 @@
         }
         
         /* bind result variables */
-        $stmt->bind_result($userIDBind, $passwordBind, $typeBind, $statusIDBind, $firstNameBind, $lastNameBind);
+        $stmt->bind_result($userIDBind, $passwordBind, $typeBind, $statusIDBind, $firstNameBind, $lastNameBind, $phoneNumberBind);
         
         //Enables 'num_rows'
         $stmt->store_result();
@@ -55,6 +55,7 @@
                         $response["userType"] = $typeBind;
                         $response["firstName"] = $firstNameBind;
                         $response["lastName"] = $lastNameBind;
+						$respones["repPhone"] = $phoneNumberBind;
                         die(json_encode($response));
                     }
                     //Incorrect Password
