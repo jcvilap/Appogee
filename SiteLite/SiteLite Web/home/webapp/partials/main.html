@@ -291,7 +291,12 @@
         </div>
         <!-- Sales Presentation Panel -->
         <div id="spPanel" class="panel panel-default" style="margin-top: 10px; display:none;">
-          <div class="panel-heading"><i class="fa fa-shopping-cart"></i> Sales Presentation</div>
+          <div class="panel-heading"><i class="fa fa-shopping-cart"></i> Sales Presentation
+              <a class="btn btn-primary btn-xs pull-right" target="_blank" href="/home/#/print/{{activeProject.project_ID}}?activeView={{activeView}}&paymentType={{paymentType}}&savingsMethod={{savingsMethod}}&mapZoom={{map.getZoom()}}">
+                  <i class="fa fa-print"></i>
+                  Print
+              </a>
+          </div>
           <div class="panel-body">
             <!-- Presentation Header -->
             <div class="row">
@@ -308,7 +313,7 @@
             <!-- Power Usage Now -->
             <div class="col-md-6">
               <div id="powerUsagePanel" class="panel panel-default">
-                <div class="panel-heading "><i class="fa fa-plug"></i> Monthly Power Usage</div>
+                <div class="panel-heading "><i class="fa fa-plug"></i> Monthly Power Usage </div>
                 <div class="panel-body">
                   <div class="col-sm-12 gadget-list-item">
                     <div class="col-sm-6">

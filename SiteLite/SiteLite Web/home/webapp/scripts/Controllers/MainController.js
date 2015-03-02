@@ -90,7 +90,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 					labels: ['Maintenance Savings', 'Power Savings', 'LED Finance Payments', 'LED Power Costs'],
 					lineColors: ["#009900","#00CC00","#CC0000","#990000"],
 					pointSize: 2,
-					hideHover: 'auto',
+                    hideHover: 'always',
 					resize: true,
 					behaveLikeLine: true,
 					smooth: false,

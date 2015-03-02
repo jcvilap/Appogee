@@ -39,6 +39,10 @@ config(['$routeProvider', function($routeProvider) {
         templateUrl: 'webapp/partials/login.html',
         controller: 'LoginController'
     }).
+    when('/print/:projectId', {
+        templateUrl: 'webapp/partials/print.html',
+        controller: 'PrintController'
+    }).
     otherwise({
         redirectTo: '/'
     }); 

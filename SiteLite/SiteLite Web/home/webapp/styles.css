@@ -203,7 +203,7 @@ table.dataTable thead .sorting_desc:after {
     color: #fff;
 }
 
-#proposedLightFixtureTable, #existingLightFixtureTable {
+#proposedLightFixtureTable, #existingLightFixtureTable, #braketsTable {
     overflow:hidden;
 }
 

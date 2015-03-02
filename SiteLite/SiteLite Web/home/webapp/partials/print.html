@@ -1,0 +1,417 @@
+<style>
+    @page { margin: 3mm;  /* this affects the margin in the printer settings */ }
+    body { padding-top:0 }
+    table { page-break-inside:auto }
+    tr    { page-break-inside:avoid; page-break-after:auto }
+    thead { display:table-header-group }
+    tfoot { display:table-footer-group }
+    .row, div { page-break-inside: avoid; }
+    .end-of-page {page-break-after: always;}
+    .quantity-col { width: 100px}
+    .partno-col { width: 200px}
+    .item.total {
+        background-color: #dff0d8 !important;
+    }
+    .arkon-label.label-success {
+        background-color: #5cb85c !important;
+        font-size: 25px !important;
+        font-weight: 500 !important;
+        padding: 5px 8px 5px 5px !important;
+        text-shadow: 0.5px 0.5px #000000 !important;
+        line-height: 1 !important;
+        color: #fff !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        vertical-align: baseline !important;
+        border-radius: .25em !important;
+        border: none !important;
+    }
+    .panel-default>.panel-heading {background-color: #f5f5f5 !important; border-color: #ddd; !important;}
+    .timeline-badge { background-color: inherit !important; color: inherit;}
+</style>
+
+<div id="main">
+    <div class="container-fluid" id="main">
+        <div id="middleContainer" class="row">
+            <!--PAGE #1-->
+            <!-- Presentation Header -->
+            <div class="row">
+                <!-- Logo (offset)-->
+                <div class="col-xs-3 pull-right">
+                    <img width="220px" style="margin: 35px 25px 0 0;" class="img-responsive pull-right" id="logo" alt="Image" src="webapp/images/ArkonLED_Logo_HighRes.jpg">
+                </div>
+                <!-- User -->
+                <div class="col-xs-4">
+                    <h3 style="margin: 35px 0px 25px 25px;">{{ activeProject.first_name }} {{ activeProject.last_name }}</br> <small><i>{{ activeProject.user_title }}</i></small></h3>
+                </div>
+            </div>
+            <!-- Project Details -->
+            <div class="row">
+                <div class="panel panel-default" style="margin: 0 35px 0 21px">
+                    <div class="panel-heading"><span style="font-size:16px">{{ activeProject.project_name }}<span class="pull-right"><em><small>{{ activeProject.city }}, {{ activeProject.state }}</small></em></span></span></div>
+                    <div class="panel-body" style="padding-bottom: 0; padding-right: 2px">
+                        <div class="list-group col-xs-6">
+                            <a class="list-group-item"> <i class="fa fa-user fa-fw"></i> Contact Name
+                                <span class="pull-right text-muted small"><em>{{ activeProject.contact_name }} </em></span>
+                            </a>
+                            <a class="list-group-item">
+                                <i class="fa fa-phone fa-fw"></i> Phone
+                                <span class="pull-right text-muted small"><em>{{ activeProject.contact_phone }}</em> </span>
+                            </a>
+                            <a class="list-group-item">
+                                <i class="fa fa-envelope fa-fw"></i> Email Address
+                                <span class="pull-right text-muted small"><em>{{ activeProject.contact_email }}</em> </span>
+                            </a>
+                        </div>
+                        <div class="list-group col-xs-6">
+                            <a class="list-group-item">
+                                <i class="fa fa-calendar fa-fw"></i> Date Created
+                                <span class="pull-right text-muted small"><em>{{ activeProject.date_opened }}</em> </span>
+                            </a>
+                            <a class="list-group-item">
+                                <i class="fa fa-area-chart fa-fw"></i> Lot Area
+                                <span class="pull-right text-muted small"><em>{{ activeProject.lot_area }} sq ft</em> </span>
+                            </a>
+                            <a class="list-group-item" href="#">
+                                <i class="fa fa-bolt fa-fw"></i> Power Cost
+                                <span class="pull-right text-muted small"><em>${{ activeProject.power_cost_per_kWh }} /kWh</em> </span>
+                            </a>
+                        </div>
+                        <div class="col-md-12" style="padding-left: 0px; padding-bottom: 15px;">
+                           <img src="{{mapUrl}}" style="width: 100%; border-radius: 5px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--PAGE #2-->
+            <!-- Existing Light Fixtures Table -->
+            <div class="row">
+                <div class="panel panel-default" style="margin: 30px 35px 0 21px">
+                    <div class="panel-heading"> Existing Light Fixtures:</div>
+                    <div class="panel-body" style="padding : 10px;">
+                        <div id="existingLightFixtureTable">
+                            <table class="table" style="margin-bottom: 0" >
+                                <thead> <tr><th style=" width: 650px">Description </th><th class="quantity-col">Quantity</th></tr> </thead>
+                                <tbody>
+                                <tr ng-repeat="pole in activeProject.existingLightFixtureTablePoles">
+                                    <td style=" width: 650px">{{ pole.bulbDesc }}</td>
+                                    <td class="quantity-col">{{ pole.numOfHeads }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Proposed Light Fixtures Table -->
+            <div class="row">
+                <div class="panel panel-default" style="margin: 20px 35px 0 21px">
+                    <div class="panel-heading"> Proposed Light Fixtures:</div>
+                    <div class="panel-body" style="padding : 10px;">
+                        <div id="proposedLightFixtureTable" >
+                            <table class="table" style="margin-bottom: 0" >
+                                <thead> <tr><th class="partno-col">Part No.</th><th>Description</th><!--<th>Wattage</th>--><th class="quantity-col">Quantity</th></tr> </thead>
+                                <tbody>
+                                <tr ng-repeat="pole in activeProject.lightFixtureTablePoles" on-finish-render="evenTableHeights()">
+                                    <td class="partno-col">{{ pole.LEDpartNumber }}</td>
+                                    <td>{{ pole.LEDdesc }}</td>
+                                    <td class="quantity-col">{{ pole.numOfHeadsProposed}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="item total partno-col"></td>
+                                    <td class="item total"><b>Totals</b></td>
+                                    <td class="item total quantity-col" >{{ activeProject.lightFixtureTotalQuantity }} </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Brakets/Others Table -->
+            <div class="row end-of-page">
+                <div class="panel panel-default" style="margin: 20px 35px 0 21px">
+                    <div class="panel-heading"> Brackets/Others:</div>
+                    <div class="panel-body" style="padding : 10px;">
+                        <div id="braketsTable">
+                            <table class="table" style="margin-bottom: 0">
+                                <thead> <tr><th class="partno-col">Part No.</th><th>Description</th><th class="quantity-col">Quantity</th></tr> </thead>
+                                <tbody>
+                                <!-- <tr ng-repeat="pole in activeProject.poles">  -->
+                                <tr>
+                                    <td class="partno-col">N/A</td>
+                                    <td>N/A</td>
+                                    <td class="quantity-col">N/A</td>
+                                </tr>
+                                <tr class="total">
+                                    <td class="item total partno-col"><div class="total"></div></td>
+                                    <td class="item total"><b>Totals</b></td>
+                                    <td class="item total quantity-col">N/A</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--PAGE #3-->
+            <!-- Monthly Power Usage -->
+            <div class="row">
+                <div class="panel panel-default" style="margin: 30px 35px 0 21px">
+                    <div class="panel-heading "><i class="fa fa-plug"></i> Monthly Power Usage</div>
+                    <div class="panel-body">
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px;">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-danger"><em><strong>Existing Usage:</strong></em></span> </br>
+                                <strong>{{ activeProject.calculationsData.existingMonthlyPowerUsage }} kWh</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="existingPowerUsage" style="height:140px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px;  font-size: 17px;">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-success"><em><strong>LED Usage:</strong></em></span> </br>
+                                <strong>{{ activeProject.calculationsData.proposedMonthlyPowerUsage }} kWh</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="proposedPowerUsage" style="height:140px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Power Usage Cost -->
+            <div class="row">
+                <div class="panel panel-default" style="margin: 20px 35px 0 21px">
+                    <div class="panel-heading"><i class="fa fa-money"></i> Monthly Power Cost</div>
+                    <div class="panel-body">
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px; ">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-danger"><em><strong>Existing Cost:</strong></em></span> </br>
+                                <strong>${{ activeProject.calculationsData.existingMonthlyPowerCost }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="existingPowerCost" style="height:140px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px; ">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-success"><em><strong>LED Cost:</strong></em></span> </br>
+                                <strong>${{ activeProject.calculationsData.proposedMonthlyPowerCost }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="proposedPowerCost" style="height:140px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Average Monthly Maintenance Cost-->
+            <div class="row">
+                <div class="panel panel-default" style="margin: 20px 35px 0 21px">
+                    <div class="panel-heading"><i class="fa fa-money"></i> Average Monthly Maintenance Cost</div>
+                    <div class="panel-body">
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px; ">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-danger"><em><strong>Existing Cost:</em></span> </br>
+                                ${{ activeProject.calculationsData.existingMonthlyMaintenanceCost }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="existingMaintenanceCost" style="height:140px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px; ">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-success"><em><strong>LED Maintenance Cost:</em></span> </br>
+                                $0.00</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="proposedMaintenanceCost" style="height:140px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Carbon Footprint-->
+            <div class="row end-of-page">
+                <div class="panel panel-default" style="margin: 20px 35px 0 21px">
+                    <div class="panel-heading"><img width="18px" src="webapp/images/footprint.ico" style="">Monthly Carbon Footprint</div>
+                    <div class="panel-body">
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px; ">
+                            <div class="col-xs-6" style="width: 190px;">
+                                </br><span class="text-muted small text-danger"><em><strong>Existing Footprint</em></span> </br>
+                                <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
+                                <strong>{{  toFormattedNumber(activeProject.calculationsData.existingKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
+                            </div>
+                            <div class="col-sm-6 pull-right" style="padding: 30px;">
+                                <img style="width: 66px; margin-right: 40px" src="webapp/images/coal.png">
+                            </div>
+                        </div>
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px; ">
+                            <div class="col-xs-6" style="width: 190px;">
+                                </br><span class="text-muted small text-success"><em><strong>LED Footprint</em></span> </br>
+                                <span class="text-muted small"><em>Equivalent to burning:</em></span> <br>
+                                <strong>{{  toFormattedNumber(activeProject.calculationsData.proposedKgCoal) }} <small>lbs</small></strong><span class="text-muted" style="font-size: 17px;"><em> of Coal</em></span>
+                            </div>
+                            <div class="col-sm-6 pull-right" style="padding: 49.5px; ">
+                                <img style="width: 30px; margin-right: 30px" src="webapp/images/coal.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--PAGE #4-->
+            <div class="row">
+                <div style="margin: 20px 0 0 21px;">
+                    <!--Costs-->
+                    <div class="col-xs-6" style=" padding-left: 0px; padding-right: 15px;">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"> <i class="fa fa-usd"></i> Costs</div>
+                            <div class="panel-body" style="padding : 10px; padding-bottom:0">
+                                <div ng-if="activeView == 'standardShipping'">
+                                    <div class="list-group">
+                                        <a class="list-group-item">Product<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.productCostStandard) }}</em></span> </a>
+                                        <a class="list-group-item">Installation<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.installationCost) }}</em></span> </a>
+                                        <a class="list-group-item">Sales Tax<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.salesTaxStandard) }}</em></span> </a>
+                                        <a class="list-group-item total"><b>Total Costs</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.totalCostStandard) }}</b></em></span></a>
+                                    </div>
+                                </div>
+                                <div ng-if="activeView == 'expeditedShipping'">
+                                    <div class="list-group">
+                                        <a class="list-group-item">Product<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.productCostExpedited) }}</em></span> </a>
+                                        <a class="list-group-item">Installation<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.installationCost) }}</em></span> </a>
+                                        <a class="list-group-item">Sales Tax<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.salesTaxExpedited) }}</em></span> </a>
+                                        <a class="list-group-item total"><b>Total Costs</b><span class="pull-right"><em><b>${{ toFormattedNumber(activeProject.calculationsData.totalCostExpedited) }}</b></em></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Benefits-->
+                    <div class="col-xs-6" style="padding-left: 0px; padding-right: 34.5px;">
+                        <div class="panel panel-default" >
+                            <div class="panel-heading"> <i class="fa fa-check-square-o"></i> Benefits </div>
+                            <div class="panel-body" style="padding : 10px; padding-bottom:0">
+                                <div class="list-group">
+                                    <a class="list-group-item">Power Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.totalPowerSavings }}</em></span> </a>
+                                    <a class="list-group-item">Maintenance Savings<span class="pull-right text-muted small"><em>${{ activeProject.calculationsData.existingTotalMaintenanceCost }}</em></span> </a>
+                                    <a class="list-group-item">Net Tax Rebate*<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.taxAbandonment) }}</em></span> </a>
+                                    <a class="list-group-item total"><b>Total Savings</b><span class="pull-right"><em><b>${{ activeProject.totalSavings }}</b></em></span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Return on Investment-->
+            <div class="row">
+                <div class="panel panel-default" style="margin: 0 35px 0 21px">
+                    <div class="panel-heading"> <i class="fa fa-credit-card"></i> Return on Investment</div>
+                    <div class="panel-body" style="padding : 10px; padding-bottom:0">
+                        <div ng-if="paymentType == 'leaseToOwn'">
+                            <div class="list-group">
+                                <a class="list-group-item">Financed Amount<span class="pull-right text-muted small"><em>
+                                    <div ng-if="activeView == 'expeditedShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostExpedited) }}</div>
+                                    <div ng-if="activeView == 'standardShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostStandard) }}</div></em></span>
+                                </a>
+                                <a class="list-group-item">Financing Period<span class="pull-right text-muted small"><em>60 Months (5 Years)</em></span> </a>
+                                <div ng-if="activeView == 'expeditedShipping'">
+                                    <a class="list-group-item">Equivalent Annual Payment<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.yearlyLeasePaymentExpedited) }}</em></span> </a>
+                                </div>
+                                <div ng-if="activeView == 'standardShipping'">
+                                    <a class="list-group-item">Equivalent Annual Payment<span class="pull-right text-muted small"><em>${{ toFormattedNumber(activeProject.calculationsData.yearlyLeasePaymentStandard) }}</em></span> </a>
+                                </div>
+                                <a class="list-group-item"><b>Monthly Payment</b><span class="pull-right"><em><b>
+                                    <div ng-if="activeView == 'expeditedShipping'">${{ activeProject.calculationsData.monthlyLeasePaymentExpedited }}</div>
+                                    <div ng-if="activeView == 'standardShipping'">${{ activeProject.calculationsData.monthlyLeasePaymentStandard }}</div>
+                                </b></em></span>
+                                </a>
+                                <div ng-if="activeView == 'expeditedShipping'">
+                                    <a class="list-group-item total"><b>Immediate Monthly Operational Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsExpedited }}</b></em></span></a>
+                                </div>
+                                <div ng-if="activeView == 'standardShipping'">
+                                    <a class="list-group-item total"><b>Immediate Monthly Operational Savings</b><span class="pull-right"><em><b>${{ activeProject.calculationsData.immediateMonthlySavingsStandard }}</b></em></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="paymentType == 'upFrontPurchase'">
+                            <div class="list-group">
+                                <a class="list-group-item">Total Price<span class="pull-right text-muted small"><em>
+                                    <div ng-if="activeView == 'expeditedShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostExpedited) }}</div>
+                                    <div ng-if="activeView == 'standardShipping'">${{ toFormattedNumber(activeProject.calculationsData.totalCostStandard) }}</div></em></span>
+                                </a>
+                                <div ng-if="activeView == 'expeditedShipping'">
+                                    <a class="list-group-item total"><b>Simple Payback Period</b><span class="pull-right"><em><b>{{ activeProject.calculationsData.simplePaybackPeriodExpedited }}</b> Months</em></span></a>
+                                </div>
+                                <div ng-if="activeView == 'standardShipping'">
+                                    <a class="list-group-item total"><b>Simple Payback Period</b><span class="pull-right"><em><b>{{ activeProject.calculationsData.simplePaybackPeriodStandard }}</b> Months</em></span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Chart-->
+            <div class="row">
+                <div id="areaChart" class="panel panel-default" style="margin: 20px 35px 0 21px">
+                    <div class="panel-heading"><i class="fa fa-bar-chart-o fa-fw"></i> Cost Comparison</div>
+                    <div class="panel-body" style="width: 1000px; padding-top: 0">
+                        <div class="col-sm-12">
+                            <h3 style="margin: 0"><i class="timeline-badge fa fa-check" style="marging-top:5px"></i>Total Savings: <i class="label arkon-label label-success arkon-label-success">${{ activeProject.totalSavings }}</i> </h3>
+                        </div>
+                        <div class="col-sm-12">
+                            <div id="morris-area-chart" style="height: 300px;"></div>
+                        </div>
+                        <div class="col-sm-12" style="margin: 15px 15px 0px 0px; font-size: 11px;">
+                            <div class="col-sm-6 col-xs-3 "><span class="leyend label" style="background-color: #CC0000 !important; padding: 1px; border:none"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>LED Finance Payments</div>
+                            <div class="col-sm-6 col-xs-3"><span class="leyend label" style="background-color: #990000 !important; padding: 1px; border:none"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>LED Power Costs</div>
+                            <div class="col-sm-6 col-xs-3"><span class="leyend label" style="background-color: #009900 !important; padding: 1px; border:none"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>Maintenance Savings</div>
+                            <div class="col-sm-6 col-xs-3"><span class="leyend label" style="background-color: #00CC00 !important; padding: 1px; border:none"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>Power Savings</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Monthly Operations Savings Row -->
+            <div class="row">
+                <div class="panel panel-default" id="operationalSavingsPanel" style="margin: 20px 35px 0 21px">
+                    <div class="panel-heading"><i class="fa fa-money" style="margin-top: 0;"></i> Total Monthly Operational Savings</div>
+                    <div class="panel-body" style="padding-top: 0">
+                        <!-- Heading -->
+                        <div class="col-sm-12">
+                            <div class="col-xs-8" style="padding-left: 0;padding-bottom: 15px;">
+                                <h3 style="margin: 0"><i class="timeline-badge fa fa-check" style="marging-top:5px"></i>Total Monthly Operational Savings:
+                                    <span class="text-success" ng-if="savingsMethod=='immediate'&&activeView=='standardShipping' " ><i class="label arkon-label label-success">${{ activeProject.calculationsData.immediateMonthlySavingsStandard }}</i></span>
+                                    <span class="text-success" ng-if="savingsMethod=='immediate'&&activeView=='expeditedShipping'" ><i class="label arkon-label label-success">${{ activeProject.calculationsData.immediateMonthlySavingsExpedited }}</i></span>
+                                    <span class="text-success" ng-if="savingsMethod=='longTerm'" ><i class="label arkon-label label-success">${{ activeProject.calculationsData.operationalSavingsLongTerm }}</i></span>
+                                </h3>
+                            </div>
+                        </div>
+                        <!-- Body -->
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px;">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-danger"><em><strong>Existing Monthly Operational Cost:</em></span></br>
+                                ${{ existingMonthlyOperationalCost }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="existingMonthlyOperationalCost" style="height:140px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 gadget-list-item" style="padding:0px; font-size: 17px;">
+                            <div class="col-xs-6" style="max-width: 200px;">
+                                </br><span class="text-muted small text-success"><em><strong>LED Monthly Operational Cost:</em></span></br>
+                                ${{ proposedMonthlyOperationalCost }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="proposedMonthlyOperationalCost" style="height:140px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
