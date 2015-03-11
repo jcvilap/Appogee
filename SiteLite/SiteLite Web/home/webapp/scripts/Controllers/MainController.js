@@ -628,7 +628,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
         for (i = 0; i < data.length; i++) { 
         	/********* Proposed Stats ************/
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
-        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost);
+        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed);
 			
 			
 
@@ -649,7 +649,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
                     var unitCost = 0;
                     for (var j = 0; j < group.length; j++) {
                         totalQuantity += Number(group[j].numOfHeadsProposed);
-                        unitCost += Number(group[j].LEDunitCost);
+                        unitCost = Number(group[j].LEDunitCost);
+						
                     };
                     var auxPole = _.pick(group[0], 'LEDpartNumber', 'LEDdesc', 'LEDunitCost', 'numOfHeadsProposed');
                     auxPole['numOfHeadsProposed'] = totalQuantity; 
