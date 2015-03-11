@@ -66,9 +66,9 @@
                   <td>{{ project.city }}</td>
                   <td>{{ project.state }}</td>
                   <td ng-switch on="project.status_description">
-                    <span ng-switch-when="ACTIVE" class="badge alert-success">{{ project.status_description }}</span>
-                    <span ng-switch-when="INACTIVE" class="badge alert-info">{{ project.status_description }}</span>
-                    <span ng-switch-when="CLOSED" class="badge alert-danger">{{ project.status_description }}</span>
+                    <span ng-switch-when="HOT" class="badge alert-danger">{{ project.status_description }}</span>
+                    <span ng-switch-when="COLD" class="badge alert-info">{{ project.status_description }}</span>
+                    <span ng-switch-when="CLOSED" class="badge alert-success">{{ project.status_description }}</span>
                   </td>
                 </tr>
               </tbody>
@@ -82,9 +82,9 @@
       <h3 id="detailsPanelHeader" class="page-header"><i class="fa fa-minus-square-o" id="detailsCrevron" style="font-size: 14px;"></i>
         &nbsp;{{ activeProject.project_name }}
         <div class="pull-right" ng-switch on="activeProject.status_description">
-            <span ng-switch-when="ACTIVE" class="badge alert-success">{{ activeProject.status_description }}</span>
-            <span ng-switch-when="INACTIVE" class="badge alert-info">{{ activeProject.status_description }}</span>
-            <span ng-switch-when="CLOSED" class="badge alert-danger">{{ activeProject.status_description }}</span>
+            <span ng-switch-when="HOT" class="badge alert-danger">{{ activeProject.status_description }}</span>
+            <span ng-switch-when="COLD" class="badge alert-info">{{ activeProject.status_description }}</span>
+            <span ng-switch-when="CLOSED" class="badge alert-success">{{ activeProject.status_description }}</span>
         </div>
       </h3>
       <div id="detailMiddleContainer">
