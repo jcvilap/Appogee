@@ -452,6 +452,9 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 				Number(calculationsData.existingYearlyMaintenanceCost)/12 + 
 	    		Number(calculationsData.existingYearByYearPowerCost[0])/12 - Number(data.proposedYearByYearPowerCost[0])/12
 			);
+			
+			$scope.activeProject.lightFixtureTotalWattage = commonFactory.toFormattedNumber(Number(calculationsData.totalLEDwattage/1000));
+		$
 		});
 
 		$('#poBnt').trigger('click');
@@ -613,6 +616,9 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		var data = $scope.activeProject.poles;
 		var totalLightFixtureQuantity = 0;
 		var totalLightFixtureUnitCost = 0.0;
+		var totalLightFixtureSaleCost = 0.0;
+		
+		
 		
 		var totalLightFixtureQuantityExisting = 0;
 
@@ -629,6 +635,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
         	/********* Proposed Stats ************/
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
         	totalLightFixtureUnitCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed);
+			totalLightFixtureSaleCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed) * 1.7;
 			
 			
 
@@ -647,14 +654,19 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
                 else if (group.length > 1) {
                     var totalQuantity = 0;
                     var unitCost = 0;
+					var saleCost = 0;
+					var LEDpoleWattage = 0;
                     for (var j = 0; j < group.length; j++) {
                         totalQuantity += Number(group[j].numOfHeadsProposed);
                         unitCost = Number(group[j].LEDunitCost);
+						saleCost = Number(group[j].LEDunitCost) * 1.7;
+						
 						
                     };
                     var auxPole = _.pick(group[0], 'LEDpartNumber', 'LEDdesc', 'LEDunitCost', 'numOfHeadsProposed');
                     auxPole['numOfHeadsProposed'] = totalQuantity; 
                     auxPole['LEDunitCost'] = unitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+					auxPole['LEDsaleCost'] = saleCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
                     groupedPoles.push(auxPole);
                 }
             }
@@ -689,7 +701,9 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 
         $scope.activeProject.existingLightFixtureTablePoles = existingGroupedPoles;
         $scope.activeProject.lightFixtureTotalUnitCost = totalLightFixtureUnitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+		$scope.activeProject.lightFixtureTotalSaleCost = totalLightFixtureSaleCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         $scope.activeProject.lightFixtureTotalQuantity = totalLightFixtureQuantity;
+		
 		
 		$scope.activeProject.lightFixtureTotalQuantityExisting = totalLightFixtureQuantityExisting;
 

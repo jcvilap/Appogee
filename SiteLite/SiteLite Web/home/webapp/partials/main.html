@@ -195,15 +195,15 @@
                             <td>{{ pole.LEDpartNumber }}</td>
                             <td>{{ pole.LEDdesc }}</td>
                             <td ng-if="userType==2">${{ pole.LEDunitCost }}</td>
-                              <td ng-if="userType==2">$</td>
+                              <td ng-if="userType==2">${{ pole.LEDsaleCost }}</td>
                             <td>{{ pole.numOfHeadsProposed}}</td>
                           </tr>
                           <tr class="alert alert-success" >
                             
                             <td><b>Totals</b></td>
-							  <td>W</td>
+							  <td>{{ activeProject.lightFixtureTotalWattage }} kW</td>
                             <td ng-if="userType==2">${{ activeProject.lightFixtureTotalUnitCost }}</td>
-                              <td ng-if="userType==2">$</td>
+                              <td ng-if="userType==2">${{ activeProject.lightFixtureTotalSaleCost }}</td>
                             <td>{{ activeProject.lightFixtureTotalQuantity }} </td>
                           </tr>
                         </tbody>

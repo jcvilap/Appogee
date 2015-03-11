@@ -177,6 +177,9 @@
                 }
             }
         }
+		
+					
+
         
         //close statement
         $stmt->close();
@@ -190,6 +193,7 @@
         die(json_encode($response));
     }
     
+	$response['totalLEDwattage'] = $sumLEDWattage;
     $response["productCostStandard"] = $sumCostProposedLED * $costs["standard_shipping"] * $costs["markup"];
     $response["productCostExpedited"] = $sumCostProposedLED * $costs["standard_shipping"] * $costs["markup"] * $costs["expedited_shipping"];
     $response["installationCost"] = $sumWallPackProposed + $sumShoeBoxProposedWithBracket + $sumShoeBoxProposedNoBracket;
@@ -400,6 +404,7 @@
     $response["proposedKgCoal"] = number_format($response["proposedKgCoal"], 0, '.', '');
     $response["simplePaybackPeriodStandard"] = number_format($response["simplePaybackPeriodStandard"], 0, '.', '');
     $response["simplePaybackPeriodExpedited"] = number_format($response["simplePaybackPeriodExpedited"], 0, '.', '');
+	$response["totalLEDwattage"] = number_format($response["totalLEDwattage"], 0, '.', '');
    
     
     $response["success"] = 1;
