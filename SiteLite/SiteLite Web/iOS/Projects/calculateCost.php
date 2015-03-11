@@ -200,7 +200,8 @@
     $response["existingYearlyMaintenanceCost"] = $sumExistingMaintenanceCost / $costs["legacy_lifespan"];
     //Light Pole Markers END *******************************************************************************
     
-    
+    //push markup through
+	$response["markup"] = $costs["markup"];
     
     //Sales Tax ********************************************************************************************
     //Standard Shipping

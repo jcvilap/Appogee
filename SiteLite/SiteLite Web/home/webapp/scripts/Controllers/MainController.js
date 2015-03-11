@@ -617,6 +617,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		var totalLightFixtureQuantity = 0;
 		var totalLightFixtureUnitCost = 0.0;
 		var totalLightFixtureSaleCost = 0.0;
+		var priceMarkup = calculationsData.markup;
 		
 		
 		
@@ -635,7 +636,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
         	/********* Proposed Stats ************/
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
         	totalLightFixtureUnitCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed);
-			totalLightFixtureSaleCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed) * 1.7;
+			totalLightFixtureSaleCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed) * priceMarkup;
 			
 			
 
@@ -659,7 +660,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
                     for (var j = 0; j < group.length; j++) {
                         totalQuantity += Number(group[j].numOfHeadsProposed);
                         unitCost = Number(group[j].LEDunitCost);
-						saleCost = Number(group[j].LEDunitCost) * 1.7;
+						saleCost = Number(group[j].LEDunitCost) * priceMarkup;
 						
 						
                     };
@@ -675,7 +676,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 			// Extract existing poles with same bulbID
 			totalLightFixtureQuantityExisting += Number(data[i].numOfHeads);
 			
-            var existingGroup = _.where(data, {bulbID: data[i].bulbID});
+            var existingGroup = _.where(data, {bulbID: data[i].bulbID, legWattage: data[i].legWattage});
 
             // Check if existingGroup was not added already to groupedPoles list
             var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID});
