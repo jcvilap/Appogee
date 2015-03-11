@@ -447,6 +447,9 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 			$scope.activeProject.calculationsData.existingYearlyMaintenanceCost = commonFactory.toFormattedNumber(Number(data.existingYearlyMaintenanceCost));
 			
 			$scope.activeProject.calculationsData.existingTotalMaintenanceCost = commonFactory.toFormattedNumber(Number((data.existingYearlyMaintenanceCost)*10));
+			
+			$scope.activeProject.calculationsData.stdShip = commonFactory.toFormattedNumber(calculationsData.standardShippingOnly);
+			$scope.activeProject.calculationsData.expShip = commonFactory.toFormattedNumber(calculationsData.expeditedShippingOnly);
 
 			$scope.activeProject.calculationsData.operationalSavingsLongTerm = commonFactory.toFormattedNumber(
 				Number(calculationsData.existingYearlyMaintenanceCost)/12 + 
@@ -454,7 +457,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 			);
 			
 			$scope.activeProject.lightFixtureTotalWattage = commonFactory.toFormattedNumber(Number(calculationsData.totalLEDwattage/1000));
-		$
+		
 		});
 
 		$('#poBnt').trigger('click');
@@ -619,6 +622,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		var totalLightFixtureSaleCost = 0.0;
 		var priceMarkup = calculationsData.markup;
 		
+		var totalExistingWattage = 0;
+		
 		
 		
 		var totalLightFixtureQuantityExisting = 0;
@@ -656,7 +661,6 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
                     var totalQuantity = 0;
                     var unitCost = 0;
 					var saleCost = 0;
-					var LEDpoleWattage = 0;
                     for (var j = 0; j < group.length; j++) {
                         totalQuantity += Number(group[j].numOfHeadsProposed);
                         unitCost = Number(group[j].LEDunitCost);
@@ -675,25 +679,30 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
             /*************** Existing Stats ***********************/
 			// Extract existing poles with same bulbID
 			totalLightFixtureQuantityExisting += Number(data[i].numOfHeads);
+			totalExistingWattage += Number(data[i].numOfHeads) * Number(data[i].legWattage);
 			
             var existingGroup = _.where(data, {bulbID: data[i].bulbID, legWattage: data[i].legWattage});
 
             // Check if existingGroup was not added already to groupedPoles list
-            var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID});
+            var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID, legWattage: data[i].legWattage});
             if(previouslyAddedExistingPole.length == 0){// If item not repeated, add to existing list
                 if (existingGroup.length == 1) {
                     existingGroupedPoles.push(
-                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist')
+                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist','legWattage')
                     );
                 }                
                 // if item repeated, calculate the total numOfHeads save it
                 else if (existingGroup.length > 1) {
                     var totalNumOfHeads = 0;
+					var existingWatts = 0;
                     for (var j = 0; j < existingGroup.length; j++) {
                         totalNumOfHeads += Number(existingGroup[j].numOfHeads);
+						existingWatts = Number(existingGroup[j].legWattage);
+						
                     };
-                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist');
+                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist','legWattage');
                     aux['numOfHeads'] = totalNumOfHeads;
+					aux['legWattage'] = existingWatts;
                     existingGroupedPoles.push(aux);
                 }
             }
@@ -705,7 +714,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		$scope.activeProject.lightFixtureTotalSaleCost = totalLightFixtureSaleCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         $scope.activeProject.lightFixtureTotalQuantity = totalLightFixtureQuantity;
 		
-		
+		$scope.activeProject.existingTotalWattage = totalExistingWattage/1000;
 		$scope.activeProject.lightFixtureTotalQuantityExisting = totalLightFixtureQuantityExisting;
 
         // TODO Calculate existing fixtures fields and add them to scope

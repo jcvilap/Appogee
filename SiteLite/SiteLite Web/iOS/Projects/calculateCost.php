@@ -199,6 +199,10 @@
     $response["installationCost"] = $sumWallPackProposed + $sumShoeBoxProposedWithBracket + $sumShoeBoxProposedNoBracket;
     $response["existingYearlyMaintenanceCost"] = $sumExistingMaintenanceCost / $costs["legacy_lifespan"];
     //Light Pole Markers END *******************************************************************************
+
+	//Shipping Only
+    $response["standardShippingOnly"] = $response["productCostStandard"] - $sumCostProposedLED;
+	$response["expeditedShippingOnly"] = $response["productCostExpedited"] - $sumCostProposedLED;
     
     //push markup through
 	$response["markup"] = $costs["markup"];
@@ -393,6 +397,8 @@
     $response["existingYearlyMaintenanceCost"] = number_format($response["existingYearlyMaintenanceCost"], 2, '.', '');
     $response["salesTaxStandard"] = number_format($response["salesTaxStandard"], 2, '.', '');
     $response["salesTaxExpedited"] = number_format($response["salesTaxExpedited"], 2, '.', '');
+	$response["standardShippingOnly"] = number_format($response["standardShippingOnly"], 2, '.', '');
+    $response["expeditedShippingOnly"] = number_format($response["expeditedShippingOnly"], 2, '.', '');
     $response["totalCostStandard"] = number_format($response["totalCostStandard"], 2, '.', '');
     $response["totalCostExpedited"] = number_format($response["totalCostExpedited"], 2, '.', '');
     $response["totalLeaseCostStandard"] = number_format($response["totalLeaseCostStandard"], 2, '.', '');

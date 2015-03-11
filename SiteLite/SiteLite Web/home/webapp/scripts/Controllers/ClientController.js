@@ -416,6 +416,8 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 				Number(calculationsData.existingYearlyMaintenanceCost)/12 + 
 	    		Number(calculationsData.existingYearByYearPowerCost[0])/12 - Number(data.proposedYearByYearPowerCost[0])/12 
 			);
+			
+			$scope.activeProject.lightFixtureTotalWattage = commonFactory.toFormattedNumber(Number(calculationsData.totalLEDwattage/1000));
 		});
 
 		$('#poBnt').trigger('click');
@@ -530,6 +532,8 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
 		var totalLightFixtureUnitCost = 0.0;
 		
 		var totalLightFixtureQuantityExisting = 0;
+		var totalExistingWattage = 0;
+
 
 		// existing fields
 		var numExistingFeature = 0, existingFeatureDesc ='';
@@ -574,15 +578,17 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
             /*************** Existing Stats ***********************/
 			// Extract existing poles with same bulbID
 			totalLightFixtureQuantityExisting += Number(data[i].numOfHeads);
+			totalExistingWattage += Number(data[i].numOfHeads) * Number(data[i].legWattage);
+
 			
-            var existingGroup = _.where(data, {bulbID: data[i].bulbID});
+            var existingGroup = _.where(data, {bulbID: data[i].bulbID, legWattage: data[i].legWattage});
 
             // Check if existingGroup was not added already to groupedPoles list
-            var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID});
+            var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID, legWattage: data[i].legWattage});
             if(previouslyAddedExistingPole.length == 0){// If item not repeated, add to existing list
                 if (existingGroup.length == 1) {
                     existingGroupedPoles.push(
-                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist')
+                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist','legWattage')
                     );
                 }                
                 // if item repeated, calculate the total numOfHeads save it
@@ -590,9 +596,11 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
                     var totalNumOfHeads = 0;
                     for (var j = 0; j < existingGroup.length; j++) {
                         totalNumOfHeads += Number(existingGroup[j].numOfHeads);
+						existingWatts = Number(existingGroup[j].legWattage);
                     };
-                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist');
+                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist','legWattage');
                     aux['numOfHeads'] = totalNumOfHeads;
+					aux['legWattage'] = existingWatts;
                     existingGroupedPoles.push(aux);
                 }
             }
@@ -603,6 +611,7 @@ arkonLEDApp.controller('ClientController',function ($scope, $http, $routeParams,
         $scope.activeProject.lightFixtureTotalUnitCost = totalLightFixtureUnitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         $scope.activeProject.lightFixtureTotalQuantity = totalLightFixtureQuantity;
 		
+		$scope.activeProject.existingTotalWattage = totalExistingWattage/1000;
 		$scope.activeProject.lightFixtureTotalQuantityExisting = totalLightFixtureQuantityExisting;
 
 

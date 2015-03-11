@@ -78,11 +78,20 @@
                   <div class="panel-body">
                     <div class="table-responsive" id="existingLightFixtureTable">
                       <table class="table table-hover" >
-                        <thead> <tr><th>Description </th><th>Quantity</th></tr> </thead>
+                        <thead> <tr><th>Description </th><th>Wattage</th><th>Qty</th></tr> </thead>
                         <tbody>
                           <tr ng-repeat="pole in activeProject.existingLightFixtureTablePoles" on-finish-render="evenTableHeights()">  
+                            
                             <td>{{ pole.bulbDesc }}</td>
+                            <td>{{ pole.legWattage }} W</td>
                             <td>{{ pole.numOfHeads }}</td>
+                              
+                          </tr>
+                            <tr class="alert alert-success" >
+                        
+                            <td><b>Totals</b></td>
+                            <td>{{ activeProject.existingTotalWattage }} kW</td>
+                            <td>{{ activeProject.lightFixtureTotalQuantityExisting }} </td>
                           </tr>
                         </tbody>
                       </table>
@@ -98,18 +107,19 @@
                   <div class="panel-body">
                     <div class="table-responsive" id="proposedLightFixtureTable" >
                       <table class="table table-hover" >
-                        <thead> <tr><th>Part No.</th><th>Description</th><!--<th>Wattage</th>--><th>Quantity</th></tr> </thead>
+                        <thead> <tr><th>Part No.</th><th>Description</th><th ng-if="userType==2">Buy</th><th ng-if="userType==2">Sell</th><th>Qty</th></tr> </thead>
                         <tbody>
                           <tr ng-repeat="pole in activeProject.lightFixtureTablePoles" on-finish-render="evenTableHeights()">  
                             <td>{{ pole.LEDpartNumber }}</td>
                             <td>{{ pole.LEDdesc }}</td>
-                            <!--<td>W</td>-->
+                            
                             <td>{{ pole.numOfHeadsProposed}}</td>
                           </tr>
                           <tr class="alert alert-success" >
-                            <td></td>
+                            
                             <td><b>Totals</b></td>
-<!--                            <td>W</td>-->
+							  <td>{{ activeProject.lightFixtureTotalWattage }} kW</td>
+                            
                             <td>{{ activeProject.lightFixtureTotalQuantity }} </td>
                           </tr>
                         </tbody>
