@@ -585,7 +585,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		}
 		else if (type == "poles"){
 			infowindow = new google.maps.InfoWindow({
-	        	content: '<div class="scrollFix"><a href="#" class="infoW" id="infoWindow'+ list[iterator].poleID +'">' + list[iterator].poleID + ' </a> <br/>' + list[iterator].LEDdesc + '</div>'
+	        	content: '<div class="scrollFix"><a href="#" class="infoW" id="infoWindow'+ list[iterator].markerNum +'">' + list[iterator].markerNum + ' </a> <br/>' + list[iterator].LEDdesc + '</div>'
 			});
 			markers.push({"key":list[iterator].poleID, "marker": marker});
 		}
