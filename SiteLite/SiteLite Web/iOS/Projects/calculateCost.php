@@ -206,6 +206,9 @@
     
     //push markup through
 	$response["markup"] = $costs["markup"];
+
+	//push sales through
+	$response["shipping"] =$costs["standard_shipping"];
     
     //Sales Tax ********************************************************************************************
     //Standard Shipping

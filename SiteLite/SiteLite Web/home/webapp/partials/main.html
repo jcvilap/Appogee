@@ -189,7 +189,7 @@
                   <div class="panel-body">
                     <div class="table-responsive" id="proposedLightFixtureTable" >
                       <table class="table table-hover" >
-                        <thead> <tr><th>Part No.</th><th>Description</th><th ng-if="userType==2">Buy</th><th ng-if="userType==2">Sell</th><th>Qty</th></tr> </thead>
+                        <thead> <tr><th>Part No.</th><th>Description</th><th ng-if="userType==2">Landed Cost</th><th ng-if="userType==2">Sell Price</th><th>Qty</th></tr> </thead>
                         <tbody>
                           <tr ng-repeat="pole in activeProject.lightFixtureTablePoles" on-finish-render="evenTableHeights()">  
                             <td>{{ pole.LEDpartNumber }}</td>

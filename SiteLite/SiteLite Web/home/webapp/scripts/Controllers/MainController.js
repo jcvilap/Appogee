@@ -621,6 +621,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		var totalLightFixtureUnitCost = 0.0;
 		var totalLightFixtureSaleCost = 0.0;
 		var priceMarkup = calculationsData.markup;
+		var shipping = calculationsData.shipping;
 		
 		var totalExistingWattage = 0;
 		
@@ -663,8 +664,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 					var saleCost = 0;
                     for (var j = 0; j < group.length; j++) {
                         totalQuantity += Number(group[j].numOfHeadsProposed);
-                        unitCost = Number(group[j].LEDunitCost);
-						saleCost = Number(group[j].LEDunitCost) * priceMarkup;
+                        unitCost = Number(group[j].LEDunitCost) * shipping;
+						saleCost = Number(group[j].LEDunitCost) * shipping * priceMarkup;
 						
 						
                     };
