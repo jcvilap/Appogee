@@ -7,8 +7,8 @@ factory('projectsFactory', function ($http, commonFactory){
     var baseUrl = commonFactory.baseUrl;
 
     // Get list of projects from web services
-    factory.getProjects = function(callback){
-        $http.get(baseUrl + "/iOS/Projects/getProjectNames.php?userID=27").
+    factory.getProjects = function(id, callback){
+        $http.get(baseUrl + "/iOS/Projects/getProjectNames.php?userID=" + id).
         success(function(data) {
             callback( data.message );
         });

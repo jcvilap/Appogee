@@ -15,7 +15,7 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 	$scope.existingMonthlyOperationalCost = null;
 	$scope.proposedMonthlyOperationalCost = null;
 
-	projectsFactory.getProjects(function(data){
+	projectsFactory.getProjects($scope.userID, function(data){
 		$scope.projects = data;
 	});
 
@@ -641,8 +641,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
         for (i = 0; i < data.length; i++) { 
         	/********* Proposed Stats ************/
         	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
-        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed);
-			totalLightFixtureSaleCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed) * priceMarkup;
+        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed) * shipping;
+			totalLightFixtureSaleCost += Number(data[i].LEDunitCost) * Number(data[i].numOfHeadsProposed) * shipping * priceMarkup;
 			
 			
 
