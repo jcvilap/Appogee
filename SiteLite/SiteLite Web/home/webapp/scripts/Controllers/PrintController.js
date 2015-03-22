@@ -312,30 +312,25 @@ arkonLEDApp.controller('PrintController',function ($scope, $http, $routeParams, 
         });
     };
 
+    // Update map with new pins
     function getLightFixturesPoles() {
-		var data = $scope.activeProject.poles;
-		var totalLightFixtureQuantity = 0;
-		var totalLightFixtureUnitCost = 0.0;
-		
-		var totalLightFixtureQuantityExisting = 0;
-		var totalExistingWattage = 0;
+        var data = $scope.activeProject.poles;
+        var totalLightFixtureQuantity = 0;
+        var totalLightFixtureUnitCost = 0.0;
+        var totalLightFixtureQuantityExisting = 0;
 
+        // Prepare data for Project Overview  Existing Light fixtures table
+        var existingGroupedPoles = new Array();
 
-		// existing fields
-		var numExistingFeature = 0, existingFeatureDesc ='';
+        // Prepare data for Project Overview Light fixtures table
+        var groupedPoles = new Array();
 
-		// Prepare data for Project Overview  Existing Light fixtures table
-		var existingGroupedPoles = new Array(); 
+        for (i = 0; i < data.length; i++) {
+            /********* Proposed Stats ************/
+            totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
+            totalLightFixtureUnitCost += Number(data[i].LEDunitCost);
 
-		// Prepare data for Project Overview Light fixtures table
-		var groupedPoles = new Array(); 
-
-        for (i = 0; i < data.length; i++) { 
-        	/********* Proposed Stats ************/
-        	totalLightFixtureQuantity += Number(data[i].numOfHeadsProposed);
-        	totalLightFixtureUnitCost += Number(data[i].LEDunitCost);
-
-            // Extract elements with the same LEDpartNumber 
+            // Extract elements with the same LEDpartNumber
             var group = _.where(data, {LEDpartNumber: data[i].LEDpartNumber});
             // Check if group was not added already to groupedPoles list
             var previouslyAddedPole  = _.where(groupedPoles, {LEDpartNumber: data[i].LEDpartNumber});
@@ -343,9 +338,9 @@ arkonLEDApp.controller('PrintController',function ($scope, $http, $routeParams, 
                 // If item not repeated, add to list
                 if (group.length == 1) {
                     groupedPoles.push(
-                    	_.pick(group[0], 'LEDpartNumber', 'LEDdesc', 'LEDunitCost', 'numOfHeadsProposed')
+                        _.pick(group[0], 'LEDpartNumber', 'LEDdesc', 'LEDunitCost', 'numOfHeadsProposed')
                     );
-                }                
+                }
                 // if item repeated, calculate the total quantity and unit costs and save it
                 else if (group.length > 1) {
                     var totalQuantity = 0;
@@ -355,38 +350,34 @@ arkonLEDApp.controller('PrintController',function ($scope, $http, $routeParams, 
                         unitCost += Number(group[j].LEDunitCost);
                     };
                     var auxPole = _.pick(group[0], 'LEDpartNumber', 'LEDdesc', 'LEDunitCost', 'numOfHeadsProposed');
-                    auxPole['numOfHeadsProposed'] = totalQuantity; 
-                    auxPole['LEDunitCost'] = unitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+                    auxPole['numOfHeadsProposed'] = totalQuantity;
+                    auxPole['LEDunitCost'] = unitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
                     groupedPoles.push(auxPole);
                 }
             }
 
             /*************** Existing Stats ***********************/
-			// Extract existing poles with same bulbID
-			totalLightFixtureQuantityExisting += Number(data[i].numOfHeads);
-			totalExistingWattage += Number(data[i].numOfHeads) * Number(data[i].legWattage);
+                // Extract existing poles with same bulbID
+            totalLightFixtureQuantityExisting += Number(data[i].numOfHeads);
 
-			
-            var existingGroup = _.where(data, {bulbID: data[i].bulbID, legWattage: data[i].legWattage});
+            var existingGroup = _.where(data, {bulbID: data[i].bulbID});
 
             // Check if existingGroup was not added already to groupedPoles list
-            var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID, legWattage: data[i].legWattage});
+            var previouslyAddedExistingPole  = _.where(existingGroupedPoles, {bulbID: data[i].bulbID});
             if(previouslyAddedExistingPole.length == 0){// If item not repeated, add to existing list
                 if (existingGroup.length == 1) {
                     existingGroupedPoles.push(
-                    	_.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist','legWattage')
+                        _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist')
                     );
-                }                
+                }
                 // if item repeated, calculate the total numOfHeads save it
                 else if (existingGroup.length > 1) {
                     var totalNumOfHeads = 0;
                     for (var j = 0; j < existingGroup.length; j++) {
                         totalNumOfHeads += Number(existingGroup[j].numOfHeads);
-						existingWatts = Number(existingGroup[j].legWattage);
                     };
-                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist','legWattage');
+                    var aux = _.pick(existingGroup[0], 'numOfHeads', 'bulbDesc', 'bulbID','poleExist');
                     aux['numOfHeads'] = totalNumOfHeads;
-					aux['legWattage'] = existingWatts;
                     existingGroupedPoles.push(aux);
                 }
             }
@@ -396,17 +387,16 @@ arkonLEDApp.controller('PrintController',function ($scope, $http, $routeParams, 
         $scope.activeProject.existingLightFixtureTablePoles = existingGroupedPoles;
         $scope.activeProject.lightFixtureTotalUnitCost = totalLightFixtureUnitCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         $scope.activeProject.lightFixtureTotalQuantity = totalLightFixtureQuantity;
-		
-		$scope.activeProject.existingTotalWattage = totalExistingWattage/1000;
-		$scope.activeProject.lightFixtureTotalQuantityExisting = totalLightFixtureQuantityExisting;
+
+        $scope.activeProject.lightFixtureTotalQuantityExisting = totalLightFixtureQuantityExisting;
 
 
         // TODO Calculate existing fixtures fields and add them to scope
         // <td>{{ pole.numExistingFeature }}</td>
         // <td>{{ pole.existingFeatureDesc }}</td>
 
-		return groupedPoles;
-	};
+        return groupedPoles;
+    };
 
     function calculateTotalSavings(data){
         var total = 0;

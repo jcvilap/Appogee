@@ -92,22 +92,12 @@
                     <div class="panel-body" style="padding : 10px;">
                         <div id="existingLightFixtureTable">
                             <table class="table" style="margin-bottom: 0" >
-                                <thead> <tr><th style=" width: 650px">Description </th><th>Wattage</th><th class="quantity-col">Quantity</th></tr> </thead>
+                                <thead> <tr><th style=" width: 650px">Description </th><th class="quantity-col">Quantity</th></tr> </thead>
                                 <tbody>
                                 <tr ng-repeat="pole in activeProject.existingLightFixtureTablePoles">
                                     <td style=" width: 650px">{{ pole.bulbDesc }}</td>
-									<td>{{ pole.legWattage }} W</td>
                                     <td class="quantity-col">{{ pole.numOfHeads }}</td>
-									  
-                          
                                 </tr>
-									
-									<tr class="alert alert-success" >
-                        
-                            <td><b>Totals</b></td>
-                            <td>{{ activeProject.existingTotalWattage }} kW</td>
-                            <td>{{ activeProject.lightFixtureTotalQuantityExisting }} </td>
-                          </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -129,9 +119,8 @@
                                     <td class="quantity-col">{{ pole.numOfHeadsProposed}}</td>
                                 </tr>
                                 <tr>
-                                    
+                                    <td class="item total partno-col"></td>
                                     <td class="item total"><b>Totals</b></td>
-									<td class="item total">{{ activeProject.totalLEDWattage }} kW</td>
                                     <td class="item total quantity-col" >{{ activeProject.lightFixtureTotalQuantity }} </td>
                                 </tr>
                                 </tbody>

@@ -6,7 +6,7 @@ factory('commonFactory', function ($http){
 	var factory = {};
 	var $scope; 
 
-	factory.baseUrl = "http://ec2-54-84-156-215.compute-1.amazonaws.com/";
+	factory.baseUrl = "http://ec2-54-84-156-215.compute-1.amazonaws.com";
 	//factory.baseUrl = "..";
 
 

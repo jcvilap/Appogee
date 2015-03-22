@@ -621,7 +621,6 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 		var totalLightFixtureUnitCost = 0.0;
 		var totalLightFixtureSaleCost = 0.0;
 		var priceMarkup = calculationsData.markup;
-		var shipping = calculationsData.
 		
 		var totalExistingWattage = 0;
 		
