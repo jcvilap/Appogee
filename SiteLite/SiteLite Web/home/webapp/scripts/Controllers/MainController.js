@@ -617,6 +617,8 @@ arkonLEDApp.controller('MainController',function ($scope, $http, projectsFactory
 	// Update map with new pins 
 	function getLightFixturesPoles() {
 		var data = $scope.activeProject.poles;
+		// Clone original data to avoid changes to the original source
+			calculationsData = $.extend(true, {}, data);
 		var totalLightFixtureQuantity = 0;
 		var totalLightFixtureUnitCost = 0.0;
 		var totalLightFixtureSaleCost = 0.0;
